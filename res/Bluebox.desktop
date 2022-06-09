@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=Bluebox2D
+GenericName=Sandbox Game
+Comment=An open source sandbox game.
+Exec=/usr/bin/bluebox.bin
+Icon=/usr/share/bluebox/logo.png
+Terminal=false
+Type=Application
+Categories=Game;
+PrefersNonDefaultGPU=false
+X-KDE-RunOnDiscreteGpu=true
