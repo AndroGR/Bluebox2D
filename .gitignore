@@ -1,0 +1,10 @@
+.vscode/
+.cache/
+
+.gitignore
+
+bluebox.bin
+.git/
+
+build/
+
