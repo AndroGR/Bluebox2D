@@ -33,7 +33,6 @@ static FORCE_INLINE inline Texture load_texture_wp(const char *path,
   return IMG_LoadTexture(*XRender, path);
 }
 bool water_placed = false;
-NOINIT static ElementData global;
 
 #ifdef __LINUX__
 /* A function to check if the asset is readable. Linux-only. */
@@ -92,7 +91,6 @@ inline static Texture darken_texture(Texture tex) {
 Texture RenderGrowthT(Texture tex, Renderer* renderer) {
         SDL_RenderClear(*renderer);
         SDL_RenderPresent(*renderer);
-        assert(tex != NULL);
         SDL_RenderCopy(*renderer, tex, NULL, NULL);
         return NONNULL;
 }

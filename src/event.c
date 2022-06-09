@@ -12,6 +12,7 @@ Copyright (C) 2022 Aggelos Tselios
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include "message.h"
 #include <SDL2/SDL_scancode.h>
 #include <event.h>
 #include <save.h>
@@ -74,12 +75,13 @@ void SetTexturePath(char **path, int *type) {
     break;
   case 6:
 #ifndef _WIN32
-    *path = "res/building.png";
+    *path = "/usr/share/bluebox/building.png";
 #else
     *path = "res/building.png";
 #endif
     break;
   default:
+    InfoMessage("This key is not yet corresponding to any assets.", NULL);
     printf("\n%s Error: Asset code %d not implemented.", BLUEBOX_CONSOLE_PREFIX,
            *type);
     *path = NULL;
@@ -98,7 +100,6 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
     "/usr/share/bluebox/pwater.png";
     #endif /* _WIN32 */
     char *texture_selected = __default_texture;
-    char* homedir = getenv("HOME");
     Mouse MouseID;    
     unsigned int set_clear = 0;
     int BufferID  = 1;
@@ -150,7 +151,6 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
             const uint8_t *press = SDL_GetKeyboardState(NULL);
             if ((press[SDL_SCANCODE_LCTRL] || press[SDL_SCANCODE_RCTRL]) && press[SDL_SCANCODE_S]) {
                 int result;
-                char save[1024];
                 if ((result = SaveProgress(false, &RendererID, &WindowID)) != 0)
                   LogToBluebox(5, "Cannot save the renderer");
             } else if ((press[SDL_SCANCODE_LCTRL] || press[SDL_SCANCODE_RCTRL]) && press[SDL_SCANCODE_O]) {
@@ -171,15 +171,17 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
               SDL_RenderPresent(RendererID);
               SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Window contents erased", "Window contents have been erased.", WindowID);
               break;
+              #ifdef HAVE__DEBUG
               case SDLK_r:
                 fprintf(stdout, "\n[ Bluebox ] Refreshed logs and surfaces.\n");
                 SDL_RenderPresent(RendererID);
                 break;
+              #endif /* HAVE__DEBUG */
               case SDLK_ESCAPE:
                 AskForExit(&WindowID);
                 LogToBluebox(1, "ESC Key was pressed -> Quitting");
-                *KeepWindowOpen_ptr = false;
                 FreeSDLResources(&WindowID, &RendererID);
+                *KeepWindowOpen_ptr = false;
                 SDL_Quit();
                 return 0;
                 break;
@@ -187,43 +189,36 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
                TextureCode= 4;
                 SetTexturePath(&texture_selected, &TextureCode);
                 SetTextureTXT(&InterV, &RendererID,  texture_selected, &WindowID);
-                WindowUpdate(&RendererID);
                 break;
               case SDLK_h:
                 TextureCode = 6;
                 SetTexturePath(&texture_selected, &TextureCode);
                 SetTextureTXT(&InterV, &RendererID,  texture_selected, &WindowID);
-                WindowUpdate(&RendererID);
                 break;
               case SDLK_g:
                TextureCode= 3;
                 SetTexturePath(&texture_selected, &TextureCode);
                 SetTextureTXT(&InterV, &RendererID, texture_selected, &WindowID);
-                WindowUpdate(&RendererID);
                 break;
               case SDLK_t:
                TextureCode= 0;
                 SetTexturePath(&texture_selected, &TextureCode);
                 SetTextureTXT(&InterV, &RendererID, texture_selected, &WindowID);
-                WindowUpdate(&RendererID);
                 break;
               case SDLK_d:
                TextureCode= 5;
                 SetTexturePath(&texture_selected, &TextureCode);
                 SetTextureTXT(&InterV, &RendererID, texture_selected, &WindowID);
-                WindowUpdate(&RendererID);
                 break;
               case SDLK_w:
                TextureCode= 2;
                 SetTexturePath(&texture_selected, &TextureCode);
                 SetTextureTXT(&InterV, &RendererID, texture_selected, &WindowID);
-                WindowUpdate(&RendererID);
                 break;
               case SDLK_s:
                TextureCode= 1;
                 SetTexturePath(&texture_selected, &TextureCode);
                 SetTextureTXT(&InterV, &RendererID, texture_selected, &WindowID);
-                WindowUpdate(&RendererID);
                 break;
               case SDLK_0:
                 i = 1;

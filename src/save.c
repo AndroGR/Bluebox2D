@@ -25,10 +25,23 @@ Copyright (C) 2022 Aggelos Tselios
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <render.h>
+#ifndef _WIN32
+#include <sys/stat.h>
+#endif /* _WIN32 */
+#include <time.h>
 
 #define MAX_PATH 1024
+
+FORCE_INLINE inline static char* getdate(void) {
+    char __retval[128];
+    time_t rawtime;
+    time(&rawtime);
+    struct tm* tmp = localtime(&rawtime);
+    strftime(__retval, sizeof(__retval), "%c ", tmp);
+    char* ret = __retval;
+    return ret;
+}
 
 FORCE_INLINE inline static bool save_directory_exists(void) {
     struct stat st;
@@ -51,6 +64,7 @@ int RemoveSave() {
     char err[MAX_PATH + 128];
     snprintf(err, sizeof(err), "Deleted file %s (Saved from Bluebox2D)", save_location);
     LogToBluebox(1, err);
+    InfoMessage(err, NULL);
     return 0;
 }
 
@@ -58,7 +72,6 @@ int SaveProgress(bool autosave, SDL_Renderer** Renderer, SDL_Window** Window) {
     #ifdef __BLUEBOX_SAVING_ENABLED
     char dirpath[1024];
     if (!save_directory_exists()) {
-        char dirpath[1024];
         snprintf(dirpath, sizeof(dirpath), "%s/.local/share/bluebox/", getenv("HOME"));
         printf("%s Creating directory: %s", BLUEBOX_CONSOLE_PREFIX, dirpath);
         mkdir(dirpath, 0755);
@@ -88,6 +101,9 @@ int SaveProgress(bool autosave, SDL_Renderer** Renderer, SDL_Window** Window) {
         snprintf(str, sizeof(str), "PNG Save at %s.", location);
     }
     SDL_FreeSurface(Screen);
+    char info[MAX_PATH + 128];
+    snprintf(info, sizeof(info), "The game was saved at %s.\nDate: %s.", location, getdate());
+    InfoMessage(info, Window);
     #endif /* __BLUEBOX_SAVING_ENABLED */
     return 0;
 }
@@ -96,6 +112,16 @@ __DEPRECATED__ void* LoadSave(Renderer* Renderer) {
     char save_location[MAX_PATH];
     snprintf(save_location, sizeof(save_location), "%s/.local/share/bluebox/save.png", getenv("HOME"));
     Texture tex = IMG_LoadTexture(*Renderer, save_location);
+    if (!tex) {
+        char errmsg[MAX_PATH + 128];
+        char errmsg_w[MAX_PATH + 128];
+        snprintf(errmsg, sizeof(errmsg), "Failed to load %s", save_location);
+        snprintf(errmsg_w, sizeof(errmsg_w), "\tYou tried to load a previous session of Bluebox2D, \nbut the data was not read successfully: %s", strerror(errno));
+        perror(errmsg);
+        ErrorMessageT(errmsg_w, NULL, "Failed to load data !");
+        return NULL;
+    }
+    InfoMessage("Loading saved game data...", NULL);
     RenderGrowthT(tex, Renderer);
     SDL_RenderPresent(*Renderer);
     return tex;

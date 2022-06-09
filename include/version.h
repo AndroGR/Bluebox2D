@@ -44,6 +44,9 @@ static char* __version_info = "Bluebox version v0.3.0-alpha, GNU/Linux build.\nA
                               #else
                               "\nSound disabled.\n"
 			      #endif /* __BLUEBOX_ENABLE_MUSIC */
+                              #ifdef __BLUEBOX_SAVING_ENABLED
+                              "Saving features in-game.\n"
+                              #endif
                               ;
 #define VERSION_INFO __version_info
                               
@@ -60,6 +63,9 @@ static char* __version_info = "Bluebox version v0.3.0, Windows build.\nAlpha rel
                               #else
                               "\nSound disabled.\n"
                               #endif /* __BLUEBOX_ENABLE_MUSIC */
+                              #ifdef __BLUEBOX_SAVING_ENABLED
+                              "Saving features in-game.\n"
+                              #endif
                               ;
 #define VERSION_INFO __version_info
                               
@@ -91,6 +97,9 @@ static char* __version_info = "Bluebox version v0.3.0.\nUnknown platform.\nAlpha
                               #else
                               "\nSound disabled.\n"
                               #endif /* __BLUEBOX_ENABLE_MUSIC */
+                              #ifdef __BLUEBOX_SAVING_ENABLED
+                              "Saving features in-game.\n"
+                              #endif
                               ;
 #define VERSION_INFO __version_info
 #endif /* Platform again */

@@ -22,19 +22,8 @@ int ErrorMessageT(const char* message, SDL_Window** Parent, const char* title) {
 	return 0;
 }
 
-int ErrorMessage(const char *message, SDL_Window **Parent) {
-    int i;
-    if (!message) return -127;
-    if (!(*Parent)) {
-	i = SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error !", message, *Parent);
-    } else {
-	i = SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error !", message, NULL);
-	if (i != 0) {
-        	LogToBluebox(5, "Cannot show error message through window");
-	        return i;
-    	}
-    }
-    return i;
+__DEPRECATED__ FORCE_INLINE inline int ErrorMessage(const char *message, SDL_Window **Parent) {
+    return ErrorMessageT(message, Parent, Parent);
 }
 
 int WarningMessage(const char *message, SDL_Window **Parent) {
@@ -47,6 +36,21 @@ int WarningMessage(const char *message, SDL_Window **Parent) {
     }
     if (i != 0) {
         LogToBluebox(5, "Cannot show warning message through window");
+        return i;
+    }
+    return i;
+}
+
+int InfoMessage(const char* msg, SDL_Window** Parent) {
+    int i;
+    assert(msg != NULL);
+    if (Parent == NULL) {
+        i = SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Info", msg, NULL);
+    } else {
+        i = SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Info", msg, *Parent);
+    }
+    if (i != 0) {
+        LogToBluebox(5, "Error showing information window");
         return i;
     }
     return i;

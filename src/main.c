@@ -28,7 +28,7 @@ Copyright (C) 2022 Aggelos Tselios
 #include <version.h>
 
 #ifndef VERSION_INFO
-#error Version information is missing, please recompile with ''
+#error Version information is missing, please recompile with VERSION_INFO included.
 #endif /* VERSION_INFO */
 
 static void usage(const char *launch) {
@@ -36,6 +36,7 @@ static void usage(const char *launch) {
   printf("\nFlags: ");
   printf("\n'help'    - Display this text and then exit.");
   printf("\n'version' - See version information about the application.");
+  printf("\n'license' - Display the license information.");
   printf("\nFor more information see \'man bluebox\' (1).\n");
   return;
 }
@@ -65,27 +66,28 @@ static inline void license(void) {
 static const char *bluebox_prefix = "\x1B[92m[ Bluebox ]\x1B[97m";
 
 int main(const int argc, const char *argv[]) {
-  Uint32 WindowFlags =
-      SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
-  SDL_SetMainReady();
-  if (!argv[1] || argc < 2) {
+      Uint32 WindowFlags = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+      #ifdef _WIN32
+      SDL_SetMainReady();
+      #endif /* _WIN32 */
+      if (!argv[1] || argc < 2) {
 #ifdef __LINUX__
-    if (strcmp(getenv("XDG_SESSION_TYPE"), "wayland") == 0) {
-      /* Bluebox flickers when we use it under Wayland. For that reason, we can
-       * "force" SDL2 to use X11, even when Wayland is present.*/
-      char *is_wayland_forced = getenv("BX_USE_WAYLAND");
-      if (!is_wayland_forced) {
-        WarningMessage(
+        if (strcmp(getenv("XDG_SESSION_TYPE"), "wayland") == 0) {
+        /* Bluebox flickers when we use it under Wayland. For that reason, we can
+         * "force" SDL2 to use X11, even when Wayland is present.*/
+        char *is_wayland_forced = getenv("BX_USE_WAYLAND");
+        if (!is_wayland_forced) {
+            WarningMessage(
             "Bluebox has detected that you are running under Wayland. To make sure that the game runs smoothly, \n\
 XWayland is going to be used. This is available only after v0.2. \nYou \
 can set the enviroment variable BX_USE_WAYLAND to \"true\" to use Wayland instead.",
             NULL);
-        setenv("SDL_VIDEODRIVER", "x11", true);
-      } else if (strcmp(is_wayland_forced, "true") == 0) {
-        LogToBluebox(1, "Wayland is being forced through BX_USE_WAYLAND");
-        setenv("SDL_VIDEODRIVER", "wayland", 1);
-      }
-    }
+            setenv("SDL_VIDEODRIVER", "x11", true);
+        } else if (strcmp(is_wayland_forced, "true") == 0) {
+          LogToBluebox(1, "Wayland is being forced through BX_USE_WAYLAND");
+          setenv("SDL_VIDEODRIVER", "wayland", 1);
+        }
+    } 
 #endif /* __LINUX__ */
 
 #ifdef __LINUX__ // Some performance optimizations for Linux
@@ -129,6 +131,7 @@ can set the enviroment variable BX_USE_WAYLAND to \"true\" to use Wayland instea
 #endif /* HAVE__DEBUG */
     printf("\n%s OpenGL Version: %s", bluebox_prefix, glGetString(GL_VERSION));
     printf("\n%s Renderer Info: %s", bluebox_prefix, glGetString(GL_RENDERER));
+    printf("\n%s Graphics Vendor: %s", bluebox_prefix, glGetString(GL_VENDOR));
     do {
       SDL_RenderClear(XRender);
       SDL_RenderPresent(XRender);
