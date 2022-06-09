@@ -17,45 +17,52 @@ Copyright (C) 2022 Aggelos Tselios
 
 #include "def.h"
 #include <Bluebox.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_render.h>
 #include <log.h>
 #include <save.h>
 #include <message.h>
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <render.h>
 
-FORCE_INLINE inline static void save_texture(const char* file_name, SDL_Renderer* renderer, SDL_Texture* texture) {
-    SDL_Texture* target = SDL_GetRenderTarget(renderer);
-    SDL_SetRenderTarget(renderer, texture);
-    int width, height;
-    SDL_QueryTexture(texture, NULL, NULL, &width, &height);
-    SDL_Surface* surface = SDL_CreateRGBSurface(0, width, height, 28, 0, 0, 0, 0);
-    if (!surface) {
-        LogToBluebox(5, "Error creating renderer surface");
-    }
-    if (SDL_RenderReadPixels(renderer, NULL, surface->format->format, surface->pixels, surface->pitch) != 0) {
-        LogToBluebox(5, "Error reading the renderer");
-    }
-    
-    #ifdef HAVE__DEBUG
-    printf("%s %s %s.", BLUEBOX_CONSOLE_PREFIX, "Saving the game status at ", file_name);
-    #endif /* HAVE__DEBUG */
-    ASSERT(IMG_SavePNG(surface, file_name) == 0);
-    SDL_FreeSurface(surface);
-    SDL_SetRenderTarget(renderer, target);
+#define MAX_PATH 1024
+
+FORCE_INLINE inline static bool save_directory_exists(void) {
+    struct stat st;
+    char dir[MAX_PATH];
+    snprintf(dir, sizeof(dir), "%s/.local/share/bluebox/", getenv("HOME"));
+    return (stat(dir, &st) == 0);
 }
 
-static __DEPRECATED__ void RemoveSave(const char* path) {
-    if (remove(path) != 0) {
-        char _tmp[256];
-        snprintf(_tmp, 256, "Couldn't delete file %s: ", path);
-        LogToBluebox(1, _tmp);
-        return;
+int RemoveSave() {
+    char save_location[MAX_PATH];
+    snprintf(save_location, sizeof(save_location), "%s/.local/share/bluebox/save.png", getenv("HOME"));
+    if (remove(save_location) == 0) {
+        LogToBluebox(1, "Save removed");
     } else {
-        char __tmp[256];
-        sprintf(__tmp, "Deleted save %s", path);
-        LogToBluebox(1, __tmp);
+        char err[MAX_PATH + 128];
+        snprintf(err, sizeof(err), "Failed to remove %s: %s", save_location, strerror(errno));
+        LogToBluebox(1, err);
+        return 2;
     }
+    char err[MAX_PATH + 128];
+    snprintf(err, sizeof(err), "Deleted file %s (Saved from Bluebox2D)", save_location);
+    LogToBluebox(1, err);
+    return 0;
 }
 
-int SaveProgress(const char* saveloc, bool autosave, SDL_Renderer** Renderer, SDL_Window** Window) {
+int SaveProgress(bool autosave, SDL_Renderer** Renderer, SDL_Window** Window) {
+    #ifdef __BLUEBOX_SAVING_ENABLED
+    char dirpath[1024];
+    if (!save_directory_exists()) {
+        char dirpath[1024];
+        snprintf(dirpath, sizeof(dirpath), "%s/.local/share/bluebox/", getenv("HOME"));
+        printf("%s Creating directory: %s", BLUEBOX_CONSOLE_PREFIX, dirpath);
+        mkdir(dirpath, 0755);
+    }
     // Autosave not yet required.
     if (autosave) return -127;
     int w, h;
@@ -69,21 +76,27 @@ int SaveProgress(const char* saveloc, bool autosave, SDL_Renderer** Renderer, SD
         LogToBluebox(5, "Error reading the renderer");
         return -1;
     }
-    if (IMG_SavePNG(Screen, saveloc) < 0) {
+    char location[1024];
+    snprintf(location, sizeof(location), "%s/.local/share/bluebox/save.png", getenv("HOME"));
+    if (IMG_SavePNG(Screen, location) < 0) {
         char str[256];
         sprintf(str, "Could not save the renderer output: %s.", IMG_GetError());
         ErrorMessage(str, Window);
         return -127;
     } else {
-        LogToBluebox(1, "Saved succesfully.");
+        char str[MAX_PATH + 128];
+        snprintf(str, sizeof(str), "PNG Save at %s.", location);
     }
     SDL_FreeSurface(Screen);
+    #endif /* __BLUEBOX_SAVING_ENABLED */
     return 0;
 }
 /* Work in progress */
-__DEPRECATED__ static void* LoadSave(SDL_Renderer** Renderer, const char* path) {
-    if (!path) return NULL;
-    SDL_Texture* tex = IMG_LoadTexture(*Renderer, path);
-    ASSERT(tex);
-    return (void*) 1;
+__DEPRECATED__ void* LoadSave(Renderer* Renderer) {
+    char save_location[MAX_PATH];
+    snprintf(save_location, sizeof(save_location), "%s/.local/share/bluebox/save.png", getenv("HOME"));
+    Texture tex = IMG_LoadTexture(*Renderer, save_location);
+    RenderGrowthT(tex, Renderer);
+    SDL_RenderPresent(*Renderer);
+    return tex;
 }

@@ -25,6 +25,9 @@ Copyright (C) 2022 Aggelos Tselios
 #include <stdio.h>
 #include <string.h>
 #include "def.h"
+// Render a texture that fills the entire renderer.
+extern Texture RenderGrowthT(Texture tex, Renderer* renderer);
+// Erase a part of the renderer
 extern NULLPROHIB void Erase(Renderer* RendererID);
 // Use this function to render an element filling the screen.
 extern NULLPROHIB Texture RenderGrowth(SDL_Renderer** Renderer);

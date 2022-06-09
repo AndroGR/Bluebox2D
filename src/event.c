@@ -12,11 +12,13 @@ Copyright (C) 2022 Aggelos Tselios
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <SDL2/SDL_scancode.h>
 #include <event.h>
 #include <save.h>
 #include <render.h>
 #include <main.h>
 #include <exit.h>
+#include <save.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,9 +93,9 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
     int i = 4;
     char* __default_texture =
     #ifdef _WIN32
-    "res/sand.png";
+    "res/pwater.png";
     #else
-    "/usr/share/bluebox/sand.png";
+    "/usr/share/bluebox/pwater.png";
     #endif /* _WIN32 */
     char *texture_selected = __default_texture;
     char* homedir = getenv("HOME");
@@ -144,14 +146,21 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
                 SetTextureTXT(&InterV, &RendererID,  texture_selected, &WindowID);
                 set_clear = 1;
             }
+            #if defined(__BLUEBOX_SAVING_ENABLED)
             const uint8_t *press = SDL_GetKeyboardState(NULL);
             if ((press[SDL_SCANCODE_LCTRL] || press[SDL_SCANCODE_RCTRL]) && press[SDL_SCANCODE_S]) {
                 int result;
                 char save[1024];
-                sprintf(save, "%s/save.png", homedir);
-                if ((result = SaveProgress(save, false, &RendererID, &WindowID)) != 0)
+                if ((result = SaveProgress(false, &RendererID, &WindowID)) != 0)
                   LogToBluebox(5, "Cannot save the renderer");
+            } else if ((press[SDL_SCANCODE_LCTRL] || press[SDL_SCANCODE_RCTRL]) && press[SDL_SCANCODE_O]) {
+                LoadSave(&RendererID);
+            } else if ((press[SDL_SCANCODE_LCTRL] || press[SDL_SCANCODE_RCTRL]) && press[SDL_SCANCODE_DELETE]) {
+                RemoveSave();
             }
+            #else
+            LogToBluebox(1, "Requested action is not supported");
+            #endif /* __BLUEBOX_SAVING_ENABLED */
             switch (EventID->key.keysym.sym) {
               case SDLK_c:
               #ifdef HAVE__DEBUG

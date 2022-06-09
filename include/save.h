@@ -22,9 +22,10 @@ Copyright (C) 2022 Aggelos Tselios
    surface to draw on. Worth noting, this is not the final way of saving. On release v0.5, i plan
    to create a layer system to add entities to the game, and hence loading images is impossible for
    layers. */
-extern int SaveProgress(const char* saveloc, bool autosave, SDL_Renderer** Renderer, SDL_Window** Window);
 #ifdef __BLUEBOX_SAVING_ENABLED
-extern void RemoveSave(const char* path);
+extern int SaveProgress(bool autosave, SDL_Renderer** Renderer, SDL_Window** Window);
+extern int RemoveSave(void);
+extern void* LoadSave(Renderer* Renderer);
 #endif /* __BLUEBOX_SAVING_ENABLED */
 #endif /* _SAVE_H */
 
