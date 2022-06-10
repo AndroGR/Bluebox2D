@@ -23,7 +23,7 @@ int ErrorMessageT(const char* message, SDL_Window** Parent, const char* title) {
 }
 
 __DEPRECATED__ FORCE_INLINE inline int ErrorMessage(const char *message, SDL_Window **Parent) {
-    return ErrorMessageT(message, Parent, Parent);
+    return ErrorMessageT(message, Parent, "Error !");
 }
 
 int WarningMessage(const char *message, SDL_Window **Parent) {

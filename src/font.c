@@ -120,18 +120,31 @@ int SetTextureTXT(TTF_Font** font, SDL_Renderer **XRender, char* TextureID, SDL_
 }
 
 Texture SetBufferTextTitle(const char* text, Renderer* Renderer, int y) {
-    static const SDL_Color Orange = {
+    const SDL_Color Orange = {
         255, 140, 0, 255
     };
+    #if defined (_WIN32)
+    const SDL_Color black = {
+    	0, 0, 0, 255
+    };
+    #endif /* _WIN32 */
     #ifndef _WIN32
     Font FontID = TTF_OpenFont("/usr/share/bluebox/fonts/InterV.ttf", 26);
     ASSERT(FontID != NULL);
     #else
     Font FontID = TTF_OpenFont("res/fonts/InterV.ttf", 26);
+    ASSERT(FontID != NULL);
     #endif /* _WIN32 */
+
+    #ifndef _WIN32
     Surface* AssetID = TTF_RenderText_Blended(FontID, text, Orange);
+    #else
+    Surface* AssetID = TTF_RenderText_Shaded_Wrapped(FontID, text, Orange, black, 512);
+    #endif
     TTF_CloseFont(FontID);
-    ASSERT(AssetID != NULL);
+    if (!AssetID)
+	    LogToBluebox(5, "Failed rendering text");
+    	    return NULL;
     Texture TextureID = SDL_CreateTextureFromSurface(*Renderer, AssetID);
     SDL_FreeSurface(AssetID);
     ASSERT(TextureID != NULL);

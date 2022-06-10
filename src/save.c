@@ -44,10 +44,14 @@ FORCE_INLINE inline static char* getdate(void) {
 }
 
 FORCE_INLINE inline static bool save_directory_exists(void) {
+    #ifndef _WIN32
     struct stat st;
     char dir[MAX_PATH];
     snprintf(dir, sizeof(dir), "%s/.local/share/bluebox/", getenv("HOME"));
     return (stat(dir, &st) == 0);
+    #else
+    return -1;
+    #endif /* _WIN32 */
 }
 
 int RemoveSave() {

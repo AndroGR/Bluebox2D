@@ -4,7 +4,9 @@
 .gitignore
 
 bluebox.bin
+bluebox.exe
 .git/
 
 build/
-
+Windows/
+win32-noinst/

@@ -116,8 +116,14 @@ FORCE_INLINE inline bool GetWaterPlaced() { return water_placed; }
 Texture _RenderParticle(const int x, const int y, const float space,
                         char **path, Renderer *Renderer, bool SingleClick) {
   bool is_water = false;
+  char* water =
+  #ifdef _WIN32
+  "res/pwater.png";
+  #else
+  "/usr/share/bluebox/pwater.png";
+  #endif /* _WIN32 */
   Texture TextureID = NULL;
-  if (strcmp(*path, "/usr/share/bluebox/pwater.png") == 0 && SingleClick) {
+  if (strcmp(*path, water) == 0 && SingleClick) {
     is_water = true;
     // Since changing the entire codebase is not a viable solution,
     // we can just call the function from here.
@@ -125,7 +131,7 @@ Texture _RenderParticle(const int x, const int y, const float space,
     *WaterPlacedPtr = true;
     return RenderGrowth(Renderer);
   } else if (!SingleClick &&
-             strcmp("/usr/share/bluebox/pwater.png", *path) == 0) {
+             strcmp(water, *path) == 0) {
 #ifdef HAVE__DEBUG
     LogToBluebox(
         1,

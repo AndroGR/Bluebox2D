@@ -22,7 +22,11 @@ Copyright (C) 2022 Aggelos Tselios
 #include <signal.h>
 #include <assert.h>
 #define ASSERT assert
+#if !defined (_WIN32)
 #define BLUEBOX_CONSOLE_PREFIX "\x1b[92m[ Bluebox ]\x1B[97m"
+#else
+#define BLUEBOX_CONSOLE_PREFIX "bluebox:"
+#endif
 #define BLUEBOX_ERR -127
 #define BLUEBOX_NULLPTR -1
 #define ERRADDR 0x0FFFF

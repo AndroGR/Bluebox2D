@@ -14,10 +14,9 @@ Copyright (C) 2022 Aggelos Tselios
 
 /* On Windows, we need to define this to tell SDL that we don't need SDL_main.
  */
-#include <def.h>
-#include <stdio.h>
+#ifdef _WIN32
 #define SDL_MAIN_HANDLED
-
+#endif /* _WIN32 */
 #define BLUEBOX
 #include <Bluebox.h>
 #include <GL/gl.h>
