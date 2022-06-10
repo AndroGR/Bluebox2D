@@ -17,29 +17,31 @@ DEBUGFLAGS=-g -O0 -fsanitize=address -DHAVE__DEBUG
 OUTFILE=bluebox.bin
 
 make: ${SOURCES}
-	${CC} ${SOURCES} -o ${OUTFILE} ${LIBFLAGS} ${CFLAGS} -I${INCLUDEDIR}
+	@${CC} ${SOURCES} -o ${OUTFILE} ${LIBFLAGS} ${CFLAGS} -I${INCLUDEDIR}
 
 debug: ${SOURCES}
-	${CC} ${SOURCES} -o ${OUTFILE} ${LIBFLAGS} ${CFLAGS} ${DEBUGFLAGS} -I${INCLUDEDIR}
+	@${CC} ${SOURCES} -o ${OUTFILE} ${LIBFLAGS} ${CFLAGS} ${DEBUGFLAGS} -I${INCLUDEDIR}
 
 install: res/Bluebox.desktop res/fonts/InterV.ttf
-	mkdir -p /usr/share/bluebox/fonts/
-	cp res/Bluebox.desktop /usr/share/applications
-	cp ${OUTFILE} /usr/bin/
-	cp res/* /usr/share/bluebox -r
-	cp LICENSE /usr/share/bluebox/LICENSE
-	echo "Done."
+	@mkdir -p /usr/share/bluebox/fonts/
+	@cp res/Bluebox.desktop /usr/share/applications
+	@cp ${OUTFILE} /usr/bin/
+	@cp res/* /usr/share/bluebox -r
+	@cp LICENSE /usr/share/bluebox/LICENSE
+	@echo "The installation was finished succesfully."
 
 uninstall: /usr/bin/${OUTFILE} /usr/share/bluebox/fonts/InterV.ttf
-	rm -rf /usr/bin/${OUTFILE}
-	rm -rf /usr/share/bluebox/*
-	rm -rf /usr/share/applications/Bluebox.desktop
-	echo "Done."
+	@rm -rf /usr/bin/${OUTFILE}
+	@rm -rf /usr/share/bluebox/*
+	@rm -rf /usr/share/applications/Bluebox.desktop
+	@echo "Uninstalled succesfully."
 
 windows: ${SOURCES}
-	${W32CC} -o ${W32_OUTFILE} ${SOURCES} -I${INCLUDEDIR} -Ivendor/SDL2 -L./lib/ ${WLIBFLAGS}
-	echo " -> Finished compilation."
-	mkdir ./Windows
-	cp ${W32_OUTFILE} ./Windows/
-	cp dll/* ./Windows
-	echo "The executable has been placed in the Windows/ directory."
+	@${W32CC} -o ${W32_OUTFILE} ${SOURCES} -I${INCLUDEDIR} -Ivendor/SDL2 -L./lib/ ${WLIBFLAGS}
+	@echo "Compiled the executable."
+	@[ -d ./Windows ] || mkdir -p ./Windows
+	@cp ${W32_OUTFILE} ./Windows/
+	@cp dll/* ./Windows
+	@echo "The executable has been placed in the Windows/ directory."
+	@cp res ./Windows -r
+	@echo "Resources copied to Windows/ directory."
