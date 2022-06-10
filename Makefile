@@ -5,7 +5,7 @@
 
 # For Windows users, make sure MinGW is in your PATH variable.
 # Change the W32CC to the correct name if its not the correct one.
-CC=gcc
+CC=/usr/bin/gcc
 W32CC=i686-w64-mingw32-gcc
 W32_OUTFILE=bluebox.exe
 SOURCES=src/save.c src/win_init.c src/render.c src/font.c src/message.c src/log.c src/exit.c src/event.c src/main.c
@@ -37,8 +37,9 @@ uninstall: /usr/bin/${OUTFILE} /usr/share/bluebox/fonts/InterV.ttf
 	echo "Done."
 
 windows: ${SOURCES}
-	${W32CC} -o ${W32_OUTFILE} ${SOURCES} -I${INCLUDEDIR} -I${vendor/SDL2} -L./lib/ ${WLIBFLAGS}
-	mkdir win32-noinst && cd win32-noinst/
-	copy ..\res\ . && copy ..\${W32_OUTFILE} .
-	copy ..\dll\* .
-	echo "Done."
+	${W32CC} -o ${W32_OUTFILE} ${SOURCES} -I${INCLUDEDIR} -Ivendor/SDL2 -L./lib/ ${WLIBFLAGS}
+	echo " -> Finished compilation."
+	mkdir ./Windows
+	cp ${W32_OUTFILE} ./Windows/
+	cp dll/* ./Windows
+	echo "The executable has been placed in the Windows/ directory."
