@@ -36,3 +36,28 @@ sudo apt install cmake make gcc
 ```bash
 sudo pacman -Sy cmake make gcc 
 ```
+# Compiling
+Bluebox offers two ways of building its source code and installing it. One is through the Makefile (It is mostly used for debugging) and one using the CMake build system, which will probably suit you more as all new features are added there. Assuming you want to compile using CMake, enter these commands in a terminal:
+
+Download the source code:
+```bash
+git clone https://github.com/androgr/Bluebox2D.git ~/Bluebox2D && cd ~/Bluebox2D/
+```
+Create the required directories:
+```bash
+mkdir build && cd build
+```
+Create the build files to compile the application:
+```bash
+cmake ..
+```
+FInally, compile the source:
+```bash
+make -j$(nproc --all) && sudo make install
+```
+These steps should work on all OSes that the dependencies are installed. If not, you may want to use the Makefile instead, which still depends on GCC but can easily be changed to CLang. To use the Makefile (Assuming you do have GCC installed), follow the first step and then type the next command:
+```bash
+make -j$(nproc --all) && sudo make install
+```
+# License
+Bluebox2D is licensed under the GNU General Public License, version 3. Clear licensing information can be found in `LICENSE`, `/usr/share/bluebox/LICENSE` (If you installed Bluebox2D already), or by executing Bluebox2D with the argument `license`. The first two show the entire GNU GPL license.
