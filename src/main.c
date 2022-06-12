@@ -130,7 +130,7 @@ can set the enviroment variable BX_USE_WAYLAND to \"true\" to use Wayland instea
 #endif /* HAVE__DEBUG */
     printf("\n%s OpenGL Version: %s", bluebox_prefix, glGetString(GL_VERSION));
     printf("\n%s Renderer Info: %s", bluebox_prefix, glGetString(GL_RENDERER));
-    printf("\n%s Graphics Vendor: %s", bluebox_prefix, glGetString(GL_VENDOR));
+    printf("\n%s Graphics Vendor: %s\n", bluebox_prefix, glGetString(GL_VENDOR));
     do {
       SDL_RenderClear(XRender);
       SDL_RenderPresent(XRender);
