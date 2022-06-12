@@ -70,7 +70,7 @@ static const char *bluebox_prefix =
 #endif
 
 int main(const int argc, const char *argv[]) {
-      Uint32 WindowFlags = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+      Uint32 WindowFlags = SDL_WINDOW_OPENGL;
       #ifdef _WIN32
       SDL_SetMainReady();
       #endif /* _WIN32 */
