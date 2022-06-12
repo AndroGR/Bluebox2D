@@ -13,14 +13,14 @@ INCLUDEDIR=include/
 CFLAGS=-std=c99 -Wno-switch-default -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wredundant-decls -Wsign-conversion -Wstrict-overflow=5 -Wundef -Wunused -Wno-implicit-fallthrough -O3 -Wno-unused-variable
 LIBFLAGS=-lSDL2 -lSDL2_image -lSDL2_ttf -lGL -lm -ldl
 WLIBFLAGS=-lSDL2.dll -lSDL2_image.dll -lSDL2_ttf.dll -lopengl32
-DEBUGFLAGS=-g -O0 -fsanitize=address -DHAVE__DEBUG
+DEBUGFLAGS=-g -O0 -DHAVE__DEBUG
 OUTFILE=bluebox.bin
 
 make: ${SOURCES}
 	@${CC} ${SOURCES} -o ${OUTFILE} ${LIBFLAGS} ${CFLAGS} -I${INCLUDEDIR}
 
 debug: ${SOURCES}
-	@${CC} ${SOURCES} -o ${OUTFILE} ${LIBFLAGS} ${CFLAGS} ${DEBUGFLAGS} -I${INCLUDEDIR}
+	@${CC} ${SOURCES} -o ${OUTFILE} ${LIBFLAGS} ${CFLAGS} ${DEBUGFLAGS} -I${INCLUDEDIR} -fsanitize=address
 
 install: res/Bluebox.desktop res/fonts/InterV.ttf
 	@mkdir -p /usr/share/bluebox/fonts/
@@ -37,7 +37,7 @@ uninstall: /usr/bin/${OUTFILE} /usr/share/bluebox/fonts/InterV.ttf
 	@echo "Uninstalled succesfully."
 
 windows: ${SOURCES}
-	@${W32CC} -o ${W32_OUTFILE} ${SOURCES} -I${INCLUDEDIR} -Ivendor/SDL2 -L./lib/ ${WLIBFLAGS}
+	@${W32CC} -o ${W32_OUTFILE} ${SOURCES} -I${INCLUDEDIR} -Ivendor/SDL2 -L./lib/ ${WLIBFLAGS} ${DEBUGFLAGS}
 	@echo "Compiled the executable."
 	@[ -d ./Windows ] || mkdir -p ./Windows
 	@cp ${W32_OUTFILE} ./Windows/
