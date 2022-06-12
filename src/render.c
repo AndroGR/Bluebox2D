@@ -142,6 +142,7 @@ NULLPROHIB Texture _RenderParticle(const int x, const int y, const float space,
     if (!MessageShown) {
         ErrorMessageT("It seems like the element you have chosen does not permit being placed multiple times. Try single-clicking instead.", NULL, "Could not place element.");
         MessageShown = true;
+        return 88;
     }  
     is_water = true;
   }
