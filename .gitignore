@@ -10,3 +10,5 @@ bluebox.exe
 build/
 Windows/
 win32-noinst/
+bluebox*.zst
+pkg/
