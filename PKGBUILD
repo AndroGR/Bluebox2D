@@ -11,7 +11,7 @@ license=('GNU General Public License v3')
 groups=()
 depends=(glibc sdl2 sdl2_image sdl2_ttf)
 makedepends=(cmake gcc make sdl2 sdl2_image sdl2_ttf)
-checkdepends=(linux)
+checkdepends=()
 optdepends=('sdl2_mixer: Have some music within the game.'
             'xorg-server: Create window dialogs with X primitives.'
 	    'freetype2: Open fonts for various operations.'
