@@ -56,13 +56,18 @@ const char *__license__ =
     "with this program; if not, see <https://www.gnu.org/licenses>.\n";
 
 static inline void license(void) {
-  printf("\nBluebox2D is licensed under the GNU GPL v3 license.\n");
-  printf("\n%s", __license__);
-  printf("\n\nDetails can be found in /usr/share/bluebox/LICENSE\n");
+      printf("\nBluebox2D is licensed under the GNU GPL v3 license.\n");
+      printf("\n%s", __license__);
+      printf("\n\nDetails can be found in /usr/share/bluebox/LICENSE\n");
 }
 
 /* The prefix Bluebox uses on the console. */
-static const char *bluebox_prefix = "\x1B[92m[ Bluebox ]\x1B[97m";
+static const char *bluebox_prefix = 
+#ifndef _WIN32
+"\x1B[92m[ Bluebox ]\x1B[97m";
+#else
+"bluebox:";
+#endif
 
 int main(const int argc, const char *argv[]) {
       Uint32 WindowFlags = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
@@ -95,10 +100,7 @@ can set the enviroment variable BX_USE_WAYLAND to \"true\" to use Wayland instea
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_PING, "0");
 #elif defined(_WIN32)
     SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d");
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-#else
-    /* To maximize compatibility, we will use OpenGL ES 2. */
-    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles2");
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 #endif /* __LINUX__ */
     SDL_SetHint(SDL_HINT_VIDEO_ALLOW_SCREENSAVER, "1");
     SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles2");
@@ -159,7 +161,7 @@ can set the enviroment variable BX_USE_WAYLAND to \"true\" to use Wayland instea
       if (strcmp(argv[1], "license") == 0) {
         license();
       } else {
-        fprintf(stderr, "%s Invalid flag: %s.\n", bluebox_prefix, argv[1]);
+        fprintf(stderr, "%s Unknown flag: %s.\n", bluebox_prefix, argv[1]);
         return -1;
       }
     }
