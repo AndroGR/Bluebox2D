@@ -61,18 +61,18 @@ FORCE_INLINE inline static Texture brighten_texture(Texture tex) {
 }
 
 static bool IsOverlaping(ElementData Data0, ElementData Data1) {
-  SDL_Point p1;
-  SDL_Rect Rect;
+    SDL_Point p1;
+    SDL_Rect Rect;
 
-  p1.x = Data0.X;
-  p1.y = Data0.Y;
+    p1.x = Data0.X;
+    p1.y = Data0.Y;
 
-  Rect.x = Data1.X;
-  Rect.y = Data1.Y;
-  Rect.w = Data1.Width;
-  Rect.h = Data1.Height;
+    Rect.x = Data1.X;
+    Rect.y = Data1.Y;
+    Rect.w = Data1.Width;
+    Rect.h = Data1.Height;
 
-  return SDL_PointInRect(&p1, &Rect);
+    return SDL_PointInRect(&p1, &Rect);
 }
 
 inline static Texture darken_texture(Texture tex) {
@@ -113,9 +113,11 @@ Texture RenderGrowth(SDL_Renderer **Renderer) {
 
 FORCE_INLINE inline bool GetWaterPlaced() { return water_placed; }
 
-Texture _RenderParticle(const int x, const int y, const float space,
+NULLPROHIB Texture _RenderParticle(const int x, const int y, const float space,
                         char **path, Renderer *Renderer, bool SingleClick) {
   bool is_water = false;
+  // We need to declare this as static so that the same message doesn't appear twice.
+  static bool MessageShown = false;
   char* water =
   #ifdef _WIN32
   "res/pwater.png";
@@ -137,6 +139,10 @@ Texture _RenderParticle(const int x, const int y, const float space,
         1,
         "This is a water texture. You cannot place them like other elements");
 #endif /* HAVE__DEBUG */
+    if (!MessageShown) {
+        ErrorMessageT("It seems like the element you have chosen does not permit being placed multiple times. Try single-clicking instead.", NULL, "Could not place element.");
+        MessageShown = true;
+    }  
     is_water = true;
   }
   if (!is_water) {
@@ -183,8 +189,7 @@ You may also try checking if Bluebox has access to the filesystem.\n \
   return (void *)TextureID;
 }
 
-// It looks like we won't be using it because it slows down the program for some
-// reason.
+
 int FreeSDLResources(SDL_Window **AllocatedWindow,
                      SDL_Renderer **AllocatedRenderer) {
   SDL_DestroyRenderer(*AllocatedRenderer);
