@@ -44,10 +44,9 @@ if (HAVE__DEBUG)
 endif()
 
 set(INSTALL_PATH /usr/share/bluebox)
-file(MAKE_DIRECTORY ${INSTALL_PATH})
-file(MAKE_DIRECTORY ${INSTALL_PATH}/fonts)
 
-
+install(DIRECTORY DESTINATION ${INSTALL_PATH})
+install(DIRECTORY DESTINATION ${INSTALL_PATH}/fonts)
 install(FILES ${CMAKE_SOURCE_DIR}/res/Bluebox.desktop DESTINATION /usr/share/applications)
 install(FILES ${CMAKE_SOURCE_DIR}/build/bluebox.bin DESTINATION /usr/bin)
 install(FILES ${CMAKE_SOURCE_DIR}/res/fonts/InterV.ttf DESTINATION ${INSTALL_PATH}/fonts/)
