@@ -1,10 +1,10 @@
 # Maintainer: Aggelos Tselios <aggelostselios777@gmail.com>
 
 pkgname="bluebox"
-pkgver="0.2"
+pkgver="0.3"
 pkgrel="1"
 epoch=
-pkgdesc="Free and open source sandbox game, written in C."
+pkgdesc="A free and open source sandbox game, written in C, designed to be extremely lightweight."
 arch=(x86_64)
 url="https://github.com/AndroGR/Bluebox2D"
 license=('GNU General Public License v3')
@@ -12,12 +12,13 @@ groups=()
 depends=(glibc sdl2 sdl2_image sdl2_ttf)
 makedepends=(cmake gcc make sdl2 sdl2_image sdl2_ttf)
 checkdepends=()
-optdepends=('sdl2_mixer: Have some music within the game.'
+optdepends=('sdl2_mixer: Required if you want to enable sound.'
             'xorg-server: Create window dialogs with X primitives.'
 	    'freetype2: Open fonts for various operations.'
-	    'wayland-protocols: Use Wayland sessions with SDL2.');
+	    'wayland: Required for BX_USE_WAYLAND');
 provides=(bluebox)
-conflicts=(bluebox-git bluebox-bin)
+conflicts=(bluebox-git)
+# Required for older packages
 replaces=(bluebox-bin)
 backup=()
 options=()
