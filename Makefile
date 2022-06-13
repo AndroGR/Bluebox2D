@@ -31,10 +31,10 @@ install: res/Bluebox.desktop res/fonts/InterV.ttf res/fonts/LICENSE_InterV.txt
 	@cp res/fonts/LICENSE_InterV.txt /usr/share/bluebox/fonts/
 	@echo "The installation was finished succesfully."
 
-uninstall: /usr/bin/${OUTFILE} /usr/share/bluebox/fonts/InterV.ttf
-	@rm -rf /usr/bin/${OUTFILE}
-	@rm -rf /usr/share/bluebox/*
-	@rm -rf /usr/share/applications/Bluebox.desktop
+uninstall: /usr/bin/${OUTFILE} /usr/share/bluebox/
+	@rm -rf /usr/bin/${OUTFILE} && echo "Executable removed."
+	@rm -rf /usr/share/bluebox/ && echo "The installation directory has been deleted."
+	@rm -rf /usr/share/applications/Bluebox.desktop && echo "Removed .desktop file from /usr/share/applications/"
 	@echo "Uninstalled succesfully."
 
 windows: ${SOURCES}
