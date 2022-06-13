@@ -4,7 +4,7 @@
 
 srcdir=./../
 HASBUILT="unknown"
-_pkgdir=bluebox-0.1_1-amd64
+_pkgdir=bluebox-0.3_1-amd64
 function has_built() {
 	if [ -f build/bluebox.bin ]; then
 		echo " -> Package already built."
