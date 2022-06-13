@@ -1,7 +1,7 @@
 Package: bluebox
-Version: 0.2
+Version: 0.3
 Architecture: amd64
-Depends: libsdl-2.0, libsdl2-image-2.0, libsdl2-ttf-2.0
+Depends: libsdl-2.0, libsdl2-image-2.0, libsdl2-ttf-2.0 
 Maintainer: Aggelos Tselios <aggelostselios777@gmail.com>
-Description: A minimal, open source sandbox game. 
- Bluebox is a minimal, open source sandbox game written in C using SDL2. For more information, see https://github.com/AndroGR/Bluebox2D/ .This package is specifically made for Debian-based systems.
+Description: A minimal, open source sandbox game.
+ Bluebox is a minimal, open source sandbox game written in C using SDL2. For more information, see https://github.com/androgr/Bluebox2D/ .This package is specifically made for Debian-based systems.
