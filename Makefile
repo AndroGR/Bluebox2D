@@ -22,12 +22,13 @@ make: ${SOURCES}
 debug: ${SOURCES}
 	@${CC} ${SOURCES} -o ${OUTFILE} ${LIBFLAGS} ${CFLAGS} ${DEBUGFLAGS} -I${INCLUDEDIR} -fsanitize=address
 
-install: res/Bluebox.desktop res/fonts/InterV.ttf
+install: res/Bluebox.desktop res/fonts/InterV.ttf res/fonts/LICENSE_InterV.txt
 	@mkdir -p /usr/share/bluebox/fonts/
 	@cp res/Bluebox.desktop /usr/share/applications
 	@cp ${OUTFILE} /usr/bin/
 	@cp res/* /usr/share/bluebox -r
 	@cp LICENSE /usr/share/bluebox/LICENSE
+	@cp res/fonts/LICENSE_InterV.txt /usr/share/bluebox/fonts/
 	@echo "The installation was finished succesfully."
 
 uninstall: /usr/bin/${OUTFILE} /usr/share/bluebox/fonts/InterV.ttf
@@ -45,3 +46,5 @@ windows: ${SOURCES}
 	@echo "The executable has been placed in the Windows/ directory."
 	@cp res ./Windows -r
 	@echo "Resources copied to Windows/ directory."
+	@cp LICENSE ./Windows
+	@echo "License moved to the Windows/ directory."
