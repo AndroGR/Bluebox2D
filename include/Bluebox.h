@@ -62,7 +62,7 @@ Copyright (C) 2022 Aggelos Tselios
 #else
 #define FORCE_INLINE
 #define NORETURN
-#define DEPRECATED_SMBL
+#define __DEPRECATED__
 #define NOSTRING
 #define NOINIT
 #define ISUNUSED
@@ -94,7 +94,7 @@ typedef struct {
     char* path;
 } ElementData;
 
-inline bool get_env(const char* name, const char* value) {
+FORCE_INLINE inline bool get_env(const char* name, const char* value) {
     const char* env = getenv(name);
     if (!env) return false;
     if (strcmp(env, value) != 0) {
