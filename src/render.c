@@ -115,16 +115,19 @@ FORCE_INLINE inline bool GetWaterPlaced() { return water_placed; }
 
 NULLPROHIB Texture _RenderParticle(const int x, const int y, const float space,
                         char **path, Renderer *Renderer, bool SingleClick) {
+
   bool is_water = false;
   // We need to declare this as static so that the same message doesn't appear twice.
   static bool MessageShown = false;
-  char* water =
+  register char* water =
   #ifdef _WIN32
   "res/pwater.png";
   #else
   "/usr/share/bluebox/pwater.png";
   #endif /* _WIN32 */
-  Texture TextureID = NULL;
+  // Since we access the texture all the time, putting it into 
+  // a register generally helps.
+  register Texture TextureID = NULL;
   if (strcmp(*path, water) == 0 && SingleClick) {
     is_water = true;
     // Since changing the entire codebase is not a viable solution,
