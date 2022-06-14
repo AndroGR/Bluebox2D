@@ -1,13 +1,13 @@
 # Documentation of Bluebox2D
-##### This document was updated last in 12/6/2022, 4:04AM.
+##### This document was updated last in 13/6/2022, 8:50PM.
 
 ### Contents:
-#### 1. Introduction
-#### 2. Getting Started
-#### 3. Dependencies and runtime
-#### 4. FAQ
-#### 5. Windows Support
-#### 6. Developer Documentation
+#### 1. Introduction [(Go To)](#1-introduction)
+#### 2. Getting Started [(Go To)](#2-getting-started)
+#### 3. Dependencies and runtime [(Go To)](#3-dependencies-and-runtime)
+#### 4. FAQ [(Go To)](#4-faq)
+#### 5. Windows Support [(Go To)](#5-windows-support)
+#### 6. Developer Documentation [(Go To)](#6-developer-documentation)
 . 
 
 .
@@ -281,3 +281,5 @@ Like any other open source project, someone may want to become a developer for B
 Reading the source code for any project is not a simple task, and different ideas / styles of coding definitely exist. For this reason, the **Bluebox Developer Documentation** exists, which is a set of different documentation pages about how to contribute, write code, optimize and compile Bluebox2D. 
 
 The Bluebox Developer Docs can be found under the **`dev/`** directory (Under this one.)
+
+[Go back to the beginning](#documentation-of-bluebox2d)
