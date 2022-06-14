@@ -14,10 +14,14 @@
 ## (1) INTRODUCTION
 This is the documentation of Bluebox2D. You are expected to read this as a guide for any questions you may have about it, any errors you may encounter or in general questions. For any developers, please check the ```dev/``` subdirectory to get started with contributing and developing for Bluebox2D.
 Feel free to extend this documentation. As of now, the documentation is not finished and parts may be wrong or atleast not enough.
+
 ## (2) GETTING STARTED
 To get started with Bluebox2D, you must first install it in your operating system. Although the GitHub page does tell how to do so, we are going to dig further into these steps:
-####** 1. Getting the source code:**
+
+#### ** 1. Getting the source code:**
+
 Bluebox2D is distributed through GitHub, where all of the development goes. Prebuilt binaries may be found in the Releases, while the master branch contains all the source code for Bluebox2D, including building files (CMake, Makefiles), runtime assets (PNGs and DLLs) and the actual C code/headers. That means that cloning (Downloading) the repository will include everything required to build and run Bluebox2D. Henceforth, we will first install it in the host machine. So first, we will clone or download the source tree:
+
 ####**For GNU/Linux, MacOS X and FreeBSD users:**
 ```
 $ git clone --recursive --depth=1 https://github.com/AndroGR/Bluebox2D.git
@@ -28,12 +32,13 @@ As mentioned before, the source code has to be compiled using either CMake or Ma
 ```
 $ cd Bluebox2D/
 ```
-We are gonna use CMake here, for three reasons:
-**1. It includes all the new features, unlike the Makefile.**
-**2. It can be used with a GUI, unlike a Makefile.**
+We are gonna use CMake here, for three reasons:\
+**1. It includes all the new features, unlike the Makefile.**\
+**2. It can be used with a GUI, unlike a Makefile.**\
 **3. It is very flexible, as in, you can remove parts of the program before compiling.**
 
 You can ignore the second one since we are gonna be using the command line here. All you need to remember for now is that we are gonna use CMake, and now it's the right time to install the tools to build:
+
 CMake requires a build system (Such as ninja), we are gonna be using Unix makefiles though, so let's install GNU Make along with the rest of the build tools:
 **Arch Linux and derivatives:**
 ```
