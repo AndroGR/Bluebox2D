@@ -1,0 +1,53 @@
+.TH BLUEBOX "1" "June 2022" "Bluebox v0.3" "User Manual"
+.SH NAME
+Bluebox \- Lightweight sandbox game written in C99.
+.SH "SYNOPSIS"
+bluebox.bin [Options | Flags]
+.SH DESCRIPTION
+Bluebox is an open source sandbox game which allows you to simulate your own Earth in your own universe, ranging from tiny
+islands in the middle of nowhere to fully-fledged civilizations ahead of humanity. It is very lightweight and fast, able to run on really old hardware and without any hardware acceleration.
+.SH INSTALLATION
+Clear building and installation instructions can be found in the GitHub repository (https://github.com/androgr/Bluebox2D). Windows users will need to compile with the GNU toolchain as of now, CMake support is not yet finished.
+
+.SH "HOW TO PLAY"
+Press a key to start the game, and select one of the elements below to use. Water is the default, and single clicking will place down an ocean.
+
+------------------- 
+
+| Keys | Texture  |
+
+|   B  | Building |
+
+|   W  | Water    |
+
+|   S  | Sand     |
+
+|   D  | Dirt     |
+
+|   T  | Tree     |
+
+|   P  | Stone    |
+
+|   G  | Grass    |
+
+-------------------
+
+You can optionally press a number from 1 to 4 to select the size of the newly placed element.
+Clicking once will place the texture only once. To place many at once, right-click
+and drag instead. If you are not satisfied with something, you can reset the window
+by pressing C.
+If compiled with the flag "enable_saving", you can save the data you drew by pressing Ctrl+S. Saves are stored in ~/.local/share/bluebox/saves/. Saving is only available for Unix-like OSes (Such as GNU/Linux).
+.SH "FLAGS"
+help \-\- Show available options.
+
+version \-\- Print the version of Bluebox, as well as some information about your hardware.
+
+license \-\- Show the license of Bluebox. Detailed information may be found in /usr/share/bluebox/LICENSE
+
+showflags \-\- Print the flags Bluebox2D is compiled with.
+.SH "LICENSE"
+Bluebox is licensed under the GNU General Public License, version 3. For more information, refer to https://www.gnu.org/licenses/gpl-3.0.en.html 
+.SH "SEE ALSO"
+make(1), cmake(1), gcc(1)
+.SH "BUGS"
+If you find any bugs or malfunctioning, post an issue to https://github.com/AndroGR/Bluebox2D/issues/ . Bugs are taken seriously and fixed with each release.
