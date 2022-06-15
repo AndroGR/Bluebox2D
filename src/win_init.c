@@ -31,7 +31,7 @@ int WindowInitializer(SDL_Window** WindowPointer, SDL_Renderer **XRenderer, Uint
         SDL_Quit();
         return -127;
     }
-    *XRenderer = SDL_CreateRenderer(*WindowPointer, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE *);
+    *XRenderer = SDL_CreateRenderer(*WindowPointer, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     if (!*XRenderer) {
         InitFailureMsg(RendererFailure);
         LogToBluebox(7, "Cannot create a software renderer");
