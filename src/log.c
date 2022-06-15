@@ -17,18 +17,18 @@ Copyright (C) 2022 Aggelos Tselios
 
 #include <log.h>
 
-// Allows a more modern way to write messages for Bluebox2D. Still under development.
+// Allows a more modern way to write messages for Bluebox2D.
 void LogToBluebox(int errlevel, const char* msg) {
     if (errlevel == 7) {
         fprintf(stderr, "\n%s Critical failure: %s.Reported error: %s.\n", BLUEBOX_CONSOLE_PREFIX, msg, SDL_GetError());
         return;
     }
     if (errlevel >= 4) {
-        fprintf(stderr, "\n%s %s: %s.\n", BLUEBOX_CONSOLE_PREFIX, msg, SDL_GetError());
+        fprintf(stderr, "\n%s %s: %s\n", BLUEBOX_CONSOLE_PREFIX, msg, SDL_GetError());
         return;
     }
     else if (errlevel == 1) {
-        fprintf(stdout, "\n%s %s.\n", BLUEBOX_CONSOLE_PREFIX, msg);
+        fprintf(stdout, "\n%s %s", BLUEBOX_CONSOLE_PREFIX, msg);
         return;
     }
     else {
@@ -37,7 +37,7 @@ void LogToBluebox(int errlevel, const char* msg) {
             return;
         }
         else if (errlevel == 5) {
-            fprintf(stderr, "\n%s %s (%s).", BLUEBOX_CONSOLE_PREFIX, msg, SDL_GetError());
+            fprintf(stderr, "\n%s %s (%s)", BLUEBOX_CONSOLE_PREFIX, msg, SDL_GetError());
             return;
         }
     }
