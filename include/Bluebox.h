@@ -94,6 +94,8 @@ typedef struct {
     char* path;
 } ElementData;
 
+/* Until all occurences of the variables with this type are removed, this should work. */
+typedef ElementData Element;
 FORCE_INLINE inline bool get_env(const char* name, const char* value) {
     const char* env = getenv(name);
     if (!env) return false;
