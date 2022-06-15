@@ -66,7 +66,7 @@ package() {
 	cp res/grass.png ${pkgdir}/usr/share/bluebox/grass.png
 	cp res/dirt.png ${pkgdir}/usr/share/bluebox/dirt.png
 	cp res/building.png ${pkgdir}/usr/share/bluebox/building.png
-	cp build/bluebox.bin ${pkgdir}/usr/bin/bluebox.bin
+	cp build/bluebox ${pkgdir}/usr/bin/bluebox
 	cp res/Bluebox.desktop ${pkgdir}/usr/share/applications/Bluebox.desktop
 	cp res/fonts/InterV.ttf ${pkgdir}/usr/share/bluebox/fonts/InterV.ttf
 	cp res/logo.png ${pkgdir}/usr/share/bluebox/logo.png

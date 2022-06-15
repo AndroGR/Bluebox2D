@@ -3,7 +3,7 @@
 Name=Bluebox2D
 GenericName=Sandbox Game
 Comment=An open source sandbox game.
-Exec=/usr/bin/bluebox.bin
+Exec=/usr/bin/bluebox
 Icon=/usr/share/bluebox/logo.png
 Terminal=false
 Type=Application
