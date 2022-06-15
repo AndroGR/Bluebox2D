@@ -244,7 +244,6 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
             MouseID.x = EventID->button.x - 25;
             MouseID.y = EventID->button.y - 25;
             if (EventID->button.button == SDL_BUTTON_RIGHT) {
-
             } else if (EventID->button.button == SDL_BUTTON_LEFT) {
                 void* render_result = (void*) _RenderParticle(MouseID.x, MouseID.y, (float)i, &texture_selected, &RendererID, true);
                 ASSERT(render_result != (void*) NULL);
@@ -253,7 +252,8 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
                 #endif /* HAVE__DEBUG */
                 BrushText(&InterV, &RendererID, &WindowID, &i);
 		            SDL_RenderPresent(RendererID);
- 	    }
+                SDL_Delay(1);
+ 	          }
           }
         }
         case SDL_MOUSEMOTION:
@@ -276,13 +276,11 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
               } else if (BufferID == 1) {
                 BufferID = 2;
                 WindowUpdate(&RendererID);
+                SDL_Delay(1);
                 break;
               }
             }
           }
-
-
-
         case SDL_WINDOWEVENT:
             
             switch (EventID->window.event) {
