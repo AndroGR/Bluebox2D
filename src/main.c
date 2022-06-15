@@ -14,6 +14,7 @@ Copyright (C) 2022 Aggelos Tselios
 
 /* On Windows, we need to define this to tell SDL that we don't need SDL_main.
  */
+#include <stdio.h>
 #ifdef _WIN32
 #define SDL_MAIN_HANDLED
 #endif /* _WIN32 */
@@ -59,6 +60,45 @@ static inline void license(void) {
       printf("\nBluebox2D is licensed under the GNU GPL v3 license.\n");
       printf("\n%s", __license__);
       printf("\n\nDetails can be found in /usr/share/bluebox/LICENSE\n");
+}
+
+static void showflags(void) {
+    /* The maximum flags supported by Bluebox2D */
+    short FlagCount = 4;
+    char* Flags[FlagCount];
+    /* Just so GCC doesn't complain about potentially uninitialized array. */
+    for (int a = 0; a < FlagCount; a++) {
+        Flags[a] = NULL;
+    }
+
+    #ifdef __BLUEBOX_CMAKE
+    Flags[0] = "bluebox_cmake";
+    #else
+    Flags[0] = "nocmake";
+    #endif /* __BLUEBOX_CMAKE */
+    
+    #ifdef HAVE__DEBUG
+    Flags[1] = "have_debug";
+    #else
+    Flags[1] = "nodebug";
+    #endif
+
+    #ifdef __BLUEBOX_SAVING_ENABLED
+    Flags[2] = "enable_saving";
+    #else
+    Flags[2] = "nosaving";
+    #endif /* __BLUEBOX_SAVING_ENABLED */
+
+    #ifdef __BLUEBOX_ENABLE_MUSIC
+    Flags[3] = "enable_music"
+    #else
+    Flags[3] = "nomusic";
+    #endif /* __BLUEBOX_ENABLE_MUSIC */
+
+    for (int i = 0; i < 4; i++) {
+            puts(Flags[i]);
+    }
+    return;
 }
 
 /* The prefix Bluebox uses on the console. */
@@ -156,10 +196,12 @@ can set the enviroment variable BX_USE_WAYLAND to \"true\" to use Wayland instea
       return 0;
     } else if (strcmp(argv[1], "help") == 0) {
       usage(argv[0]);
-
+    // For some reason, the compiler screams if we don't put it like this. Stupid but it works fine so?
     } else {
       if (strcmp(argv[1], "license") == 0) {
-        license();
+          license();
+      } else if (strcmp(argv[1], "showflags") == 0) {
+          showflags();
       } else {
         fprintf(stderr, "%s Unknown flag: %s.\n", bluebox_prefix, argv[1]);
         return -1;
