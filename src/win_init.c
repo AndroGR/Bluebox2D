@@ -16,6 +16,7 @@ Copyright (C) 2022 Aggelos Tselios
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+
 #include <init.h>
 
 int WindowInitializer(SDL_Window** WindowPointer, SDL_Renderer **XRenderer, Uint32 flags) {
