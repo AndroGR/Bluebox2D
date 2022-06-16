@@ -57,7 +57,7 @@ function create_pkg() {
 	echo " -> Finished preparing, moving data..."
 	echo " -> Directory update: $(pwd)."
 	cp tools/control ${_pkgdir}/DEBIAN/
-	cp build/bluebox.bin ${_pkgdir}/usr/bin/
+	cp build/bluebox ${_pkgdir}/usr/bin/
 	cp res/Bluebox.desktop ${_pkgdir}/usr/share/applications
 	cp res/*png ${_pkgdir}/usr/share/bluebox
 	cp man/bluebox.1.gz ${_pkgdir}/usr/share/man/man1/
