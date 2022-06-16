@@ -90,7 +90,7 @@ static void showflags(void) {
     #endif /* __BLUEBOX_SAVING_ENABLED */
 
     #ifdef __BLUEBOX_ENABLE_MUSIC
-    Flags[3] = "enable_music"
+    Flags[3] = "enable_music";
     #else
     Flags[3] = "nomusic";
     #endif /* __BLUEBOX_ENABLE_MUSIC */

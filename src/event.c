@@ -252,7 +252,6 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
                 #endif /* HAVE__DEBUG */
                 BrushText(&InterV, &RendererID, &WindowID, &i);
 		            SDL_RenderPresent(RendererID);
-                SDL_Delay(1);
  	          }
           }
         }
@@ -276,7 +275,6 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
               } else if (BufferID == 1) {
                 BufferID = 2;
                 WindowUpdate(&RendererID);
-                SDL_Delay(1);
                 break;
               }
             }
