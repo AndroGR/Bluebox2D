@@ -22,7 +22,9 @@ Copyright (C) 2022 Aggelos Tselios
 #include <Bluebox.h>
 #include <GL/gl.h>
 #include <event.h>
+#ifdef __BLUEBOX_ENABLE_MUSIC
 #include <SDL2/SDL_mixer.h>
+#endif /* __BLUEBOX_ENABLE_MUSIC */
 #include <init.h>
 #include <log.h>
 #include <message.h>
