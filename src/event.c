@@ -13,6 +13,7 @@ Copyright (C) 2022 Aggelos Tselios
 */
 
 #include "message.h"
+#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_scancode.h>
 #include <event.h>
 #include <save.h>
@@ -111,6 +112,9 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
     #else
     TTF_Font* InterV = TTF_OpenFont("res/fonts/InterV.ttf", 17);
     #endif /* _WIN32 */
+    #ifdef __BLUEBOX_ENABLE_MUSIC
+    Mix_Music *MusicID = StartMusic(NULL);
+    #endif /* __BLUEBOX_ENABLE_MUSIC */
     for (int i = 0; i < 3; i++) {
         SDL_RenderClear(RendererID);
         WindowUpdate(&RendererID);

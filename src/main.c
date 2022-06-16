@@ -22,6 +22,7 @@ Copyright (C) 2022 Aggelos Tselios
 #include <Bluebox.h>
 #include <GL/gl.h>
 #include <event.h>
+#include <SDL2/SDL_mixer.h>
 #include <init.h>
 #include <log.h>
 #include <message.h>
@@ -158,9 +159,6 @@ can set the enviroment variable BX_USE_WAYLAND to \"true\" to use Wayland instea
     void *ctx = SDL_GL_CreateContext(XWindow);
     assert(ctx != NULL);
     SDL_GL_MakeCurrent(XWindow, ctx);
-#ifdef __BLUEBOX_ENABLE_MUSIC
-    Mix_Music *MusicID = StartMusic(NULL);
-#endif /* __BLUEBOX_ENABLE_MUSIC */
 #ifdef HAVE__DEBUG
     SDL_RendererInfo RendererInfo;
     SDL_GetRendererInfo(XRender, &RendererInfo);
