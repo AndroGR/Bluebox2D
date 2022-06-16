@@ -8,7 +8,7 @@
 CC:=/usr/bin/gcc
 W32CC:=i686-w64-mingw32-gcc
 W32_OUTFILE=bluebox.exe
-SOURCES=src/win_init.c src/render.c src/font.c src/message.c src/log.c src/exit.c src/event.c src/main.c
+SOURCES=src/win_init.c src/render.c src/font.c src/message.c src/log.c src/exit.c src/event.c src/main.c src/save.c
 INCLUDEDIR=include/
 CFLAGS=-std=c99 -Wno-switch-default -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wredundant-decls -Wsign-conversion -Wstrict-overflow=5 -Wundef -Wunused -Wno-implicit-fallthrough -O3 -Wno-unused-variable
 LIBFLAGS=-lSDL2 -lSDL2_image -lSDL2_ttf -lGL -lm -ldl
