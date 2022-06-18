@@ -142,9 +142,10 @@ Texture SetBufferTextTitle(const char* text, Renderer* Renderer, int y) {
     Surface* AssetID = TTF_RenderText_Shaded_Wrapped(FontID, text, Orange, black, 512);
     #endif
     TTF_CloseFont(FontID);
-    if (!AssetID)
+    if (!AssetID) {
 	    LogToBluebox(5, "Failed rendering text");
     	    return NULL;
+    }
     Texture TextureID = SDL_CreateTextureFromSurface(*Renderer, AssetID);
     SDL_FreeSurface(AssetID);
     ASSERT(TextureID != NULL);
