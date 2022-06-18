@@ -61,23 +61,23 @@ int InitFailureMsg(MessageError Message) {
     switch (Message) {
         case AssetLoadFailure:
             sprintf(err_report, "AssetLoadFailure: Asset requested could not be found in the system.");
-            ErrorMessage(err_report, NULL);
+            ErrorMessageT(err_report, NULL, "Error !");
             return 0;
             break;
         case WindowFailure:
             sprintf(err_report, "Failed to create a window through SDL: The reported error was: %s", SDL_GetError());
-            ErrorMessage(err_report, NULL);
+            ErrorMessageT(err_report, NULL, "Could not create a window");
             return 0;
             break;
         case RendererFailure:
             sprintf(err_report, "Failed to create the renderer: The reported error was: %s", SDL_GetError());
-            ErrorMessage(err_report, NULL);
+            ErrorMessageT(err_report, NULL, "Could not create a renderer");
             return 0;
             break;
         case SegmentFailure: return -1;
         case LibraryFailure:
             sprintf(err_report, "Couldn't open library: The requested library couldn't be read.");
-            ErrorMessage(err_report, NULL);
+            ErrorMessageT(err_report, NULL, "Error !");
             return 0;
             break;
         case OpeningFailure: return -1;
