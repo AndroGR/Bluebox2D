@@ -20,7 +20,6 @@ Copyright (C) 2022 Aggelos Tselios
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
 #include <log.h>
-#include <save.h>
 #include <message.h>
 #include <errno.h>
 #include <stdio.h>
