@@ -21,6 +21,11 @@ Copyright (C) 2022 Aggelos Tselios
 #define MODULE_SUCCESS	0
 #define MODULE_NO_ENTR	127
 #define MODULE_INVALID	-1
+#define MODULE_FAILURE	-88
+
+#include <Bluebox.h>
+#include <log.h>
+#include <dlfcn.h>
 
 /*
  * An opaque type, representing a module. You should NOT
