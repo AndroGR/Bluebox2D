@@ -16,7 +16,7 @@ Copyright (C) 2022 Aggelos Tselios
 */
 
 #include <log.h>
-
+#include <errno.h>
 // Allows a more modern way to write messages for Bluebox2D.
 void LogToBluebox(int errlevel, const char* msg) {
     if (errlevel == 7) {
@@ -41,4 +41,10 @@ void LogToBluebox(int errlevel, const char* msg) {
             return;
         }
     }
+}
+
+void LogMessage(const char* message) {
+	char buf[512];
+	sprintf(buf, "%s %s (%s)", BLUEBOX_CONSOLE_PREFIX, message, strerror(errno));
+	puts(buf);
 }
