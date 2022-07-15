@@ -25,6 +25,18 @@ Copyright (C) 2022 Aggelos Tselios
 #include <stdio.h>
 #include <string.h>
 #include "def.h"
+
+/*  This is a struct that contains everything associated with a texture. */
+typedef struct TextureData {
+    Texture raw_texture;
+    int x, y;
+    static int times_redrawn;
+    Renderer* RendererID;
+} TextureData;
+
+// This basically redraws a texture given, useful to redraw
+// textures when resizing the window.
+extern Texture RedrawTexture(Texture tex);
 // Render a texture that fills the entire renderer.
 extern Texture RenderGrowthT(Texture tex, Renderer* renderer);
 // Erase a part of the renderer
