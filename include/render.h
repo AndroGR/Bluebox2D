@@ -30,21 +30,22 @@ Copyright (C) 2022 Aggelos Tselios
 typedef struct TextureData {
     Texture raw_texture;
     int x, y;
-    static int times_redrawn;
+    int times_redrawn;
     Renderer* RendererID;
+    bool success;
 } TextureData;
 
 // This basically redraws a texture given, useful to redraw
 // textures when resizing the window.
-extern Texture RedrawTexture(Texture tex);
+extern TextureData RedrawTexture(TextureData data);
 // Render a texture that fills the entire renderer.
-extern Texture RenderGrowthT(Texture tex, Renderer* renderer);
+extern TextureData RenderGrowthT(TextureData data);
 // Erase a part of the renderer
 extern NULLPROHIB void Erase(Renderer* RendererID);
 // Use this function to render an element filling the screen.
 extern NULLPROHIB Texture RenderGrowth(SDL_Renderer** Renderer);
 // Basically draw an image to the window. The function you see being called for 99% of the game loop.
-extern NULLPROHIB Texture _RenderParticle(const int x, const int y, const float space, char** path, SDL_Renderer** Renderer, bool SingleClick);
+extern NULLPROHIB TextureData _RenderParticle(const int x, const int y, const float space, char** path, SDL_Renderer** Renderer, bool SingleClick);
 // Load a static texture for bigger dimensions. Will soon be replaced by Fill()
 extern NULLPROHIB SDL_Texture* TextureLoader(int x, int y, const char* path, SDL_Renderer** WindowRenderer);
 // Add a background in the start menu.

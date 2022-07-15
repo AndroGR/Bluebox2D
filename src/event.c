@@ -13,6 +13,10 @@ Copyright (C) 2022 Aggelos Tselios
 */
 
 #include "message.h"
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_stdinc.h>
+#include <SDL2/SDL_video.h>
+#include <stdbool.h>
 #ifdef __BLUEBOX_ENABLE_MUSIC
 #include <SDL2/SDL_mixer.h>
 #endif /* __BLUEBOX_ENABLE_MUSIC */
@@ -94,6 +98,7 @@ void SetTexturePath(char **path, int *type) {
 
 extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer RendererID, SDL_Window* WindowID) {
     ASSERT(RendererID != NULL);
+    SDL_Rect window_viewport;
     int ShouldClear = false;
     int i = 4;
     char* __default_texture =
@@ -102,6 +107,17 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
     #else
     "/usr/share/bluebox/pwater.png";
     #endif /* _WIN32 */
+    TextureData OceanTexture;
+    /* 
+     * This is basically a heap allocated array where we store each texture drawn. 
+     * TODO: Create this as a vector instead (See vector.c.)
+     */
+    TextureData* texture_slots = calloc(1, sizeof(struct TextureData));
+    /*
+     * And this is the amount of textures drawn, that
+     * will be used by realloc().
+    */
+    static unsigned long texture_count = 0;
     char *texture_selected = __default_texture;
     Mouse MouseID;    
     unsigned int set_clear = 0;
@@ -122,6 +138,7 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
         WindowUpdate(&RendererID);
     }
     while (SDL_WaitEvent(*&EventID)) {
+	  SDL_RenderPresent(RendererID);
         /* We can't use newlines (\n) so we have to call them independently. */
           if (ShouldClear == false) {
             SetBufferTextTitle("Welcome to Bluebox !", &RendererID, 12);
@@ -251,13 +268,9 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
             MouseID.y = EventID->button.y - 25;
             if (EventID->button.button == SDL_BUTTON_RIGHT) {
             } else if (EventID->button.button == SDL_BUTTON_LEFT) {
-                void* render_result = (void*) _RenderParticle(MouseID.x, MouseID.y, (float)i, &texture_selected, &RendererID, true);
-                ASSERT(render_result != (void*) NULL);
-                #ifdef HAVE__DEBUG
-                LogToBluebox(1, "Left button pressed");
-                #endif /* HAVE__DEBUG */
+                OceanTexture = _RenderParticle(MouseID.x, MouseID.y, (float)i, &texture_selected, &RendererID, true);
+                ASSERT(OceanTexture.success != false);
                 BrushText(&InterV, &RendererID, &WindowID, &i);
-		            SDL_RenderPresent(RendererID);
  	          }
           }
         }
@@ -272,35 +285,53 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
             if (EventID->motion.state & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
               ShouldClear = true;
               if (BufferID == 2 && texture_selected != NULL) {
-                      void* __render_result = (void*) _RenderParticle(MouseID.x, MouseID.y, i, &texture_selected, &RendererID, false);
-                      assert(__render_result != NULL);
+                      int texcount = 0;
+                      if (texture_count == 0) { texcount = 0; }
+                      texture_slots[texcount] = _RenderParticle(MouseID.x, MouseID.y, i, &texture_selected, &RendererID, false);
+                      texture_count++;
                       BrushText(&InterV, &RendererID, &WindowID, &i);
                       SetTextureTXT(&InterV, &RendererID, texture_selected, &WindowID);
                       BufferID = 1;
                       break;
               } else if (BufferID == 1) {
                 BufferID = 2;
-                WindowUpdate(&RendererID);
+                /* No need to update, since the loop already updates each frame. */
                 break;
               }
             }
           }
         case SDL_WINDOWEVENT:
-            
             switch (EventID->window.event) {
+            case SDL_WINDOWEVENT_SIZE_CHANGED:
+            case SDL_WINDOWEVENT_RESIZED:
+              /* First we have to clear the window so no remnants remain. */
+              SDL_RenderClear(RendererID);
+              window_viewport.x = 0;
+              window_viewport.y = 0;
+              SDL_GetWindowSize(WindowID, &window_viewport.w, &window_viewport.h);
+              SDL_RenderSetViewport(RendererID, &window_viewport);
 
-            case SDL_WINDOWEVENT_RESTORED:
-                SDL_RenderClear(RendererID);
-                WindowUpdate(&RendererID);
-                SDL_RenderClear(RendererID);
-                WindowUpdate(&RendererID);
-                break;
+              /* While we're at it, we'll also render the ocean. */
+              OceanTexture = _RenderParticle(MouseID.x, MouseID.y, (float)i, &texture_selected, &RendererID, true);
+              ASSERT(OceanTexture.success != false);
+              
+              /* As well as all the textures drawn before. */
+              for (unsigned long _a = 0; _a < texture_count; _a++) {
+                  RedrawTexture(texture_slots[_a]);
+                  #ifdef HAVE__DEBUG
+                  char tmp[256];
+                  sprintf(tmp, "Redrawn %d textures registered.");
+                  LogToBluebox(1, tmp);
+                  #endif /* HAVE__DEBUG */
+              }
+              break;
             }
 
             case SDL_MOUSEBUTTONUP:
                 MouseID.MouseDown = false;
                 break;
         }
+	SDL_RenderPresent(&RendererID);
     } while(*KeepWindowOpen_ptr == (bool) true);
 
   quit:

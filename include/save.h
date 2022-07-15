@@ -21,7 +21,8 @@ Copyright (C) 2022 Aggelos Tselios
 /* Save the renderer to a readable file. This file can then be loaded from the disk and used as a
    surface to draw on. Worth noting, this is not the final way of saving. On release v0.5, i plan
    to create a layer system to add entities to the game, and hence loading images is impossible for
-   layers. */
+   layers. 
+*/
 #ifdef __BLUEBOX_SAVING_ENABLED
 extern int SaveProgress(bool autosave, SDL_Renderer** Renderer, SDL_Window** Window);
 extern int RemoveSave(void);
