@@ -17,6 +17,7 @@ Copyright (C) 2022 Aggelos Tselios
 
 #include "def.h"
 #include <Bluebox.h>
+#include <save.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
 #include <log.h>
@@ -97,7 +98,7 @@ int SaveProgress(bool autosave, SDL_Renderer** Renderer, SDL_Window** Window) {
     if (IMG_SavePNG(Screen, location) < 0) {
         char str[256];
         sprintf(str, "Could not save the renderer output: %s.", IMG_GetError());
-        ErrorMessage(str, Window);
+        ErrorMessageT(str, Window, "Failed to save the renderer output !");
         return -127;
     } else {
         char str[MAX_PATH + 128];
@@ -111,21 +112,22 @@ int SaveProgress(bool autosave, SDL_Renderer** Renderer, SDL_Window** Window) {
     return 0;
 }
 /* Work in progress */
-__DEPRECATED__ void* LoadSave(Renderer* Renderer) {
+__DEPRECATED__ void LoadSave(Renderer* Renderer) {
+    TextureData data;
     char save_location[MAX_PATH];
     snprintf(save_location, sizeof(save_location), "%s/.local/share/bluebox/save.png", getenv("HOME"));
-    Texture tex = IMG_LoadTexture(*Renderer, save_location);
-    if (!tex) {
+    data.raw_texture = IMG_LoadTexture(*Renderer, save_location);
+
+    if (!data.raw_texture) {
         char errmsg[MAX_PATH + 128];
         char errmsg_w[MAX_PATH + 128];
         snprintf(errmsg, sizeof(errmsg), "Failed to load %s", save_location);
         snprintf(errmsg_w, sizeof(errmsg_w), "\tYou tried to load a previous session of Bluebox2D, \nbut the data was not read successfully: %s", strerror(errno));
         perror(errmsg);
         ErrorMessageT(errmsg_w, NULL, "Failed to load data !");
-        return NULL;
     }
+    
     InfoMessage("Loading saved game data...", NULL);
-    RenderGrowthT(tex, Renderer);
+    RenderGrowthT(data);
     SDL_RenderPresent(*Renderer);
-    return tex;
 }

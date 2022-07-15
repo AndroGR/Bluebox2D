@@ -26,7 +26,7 @@ int WindowInitializer(SDL_Window** WindowPointer, SDL_Renderer **XRenderer, Uint
     #else
     Surface* WindowIcon = IMG_Load("res/logo.png");
     #endif /* _WIN32 */
-    *WindowPointer = SDL_CreateWindow("Bluebox2D (1280x720)", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, flags);
+    *WindowPointer = SDL_CreateWindow("Bluebox2D (1280x720)", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, flags | SDL_WINDOW_RESIZABLE);
     if (!*WindowPointer) {
         LogToBluebox(7, "Could not create a window from SDL");
         SDL_Quit();

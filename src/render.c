@@ -16,6 +16,8 @@ Copyright (C) 2022 Aggelos Tselios
 */
 
 #include <Bluebox.h>
+#include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
 #define MS(x) ((float)(x / 1004))
 
 #include <log.h>
@@ -48,16 +50,16 @@ FORCE_INLINE inline static bool check_file(const char *filename) {
 // We first render the texture returned by this function, then
 // the normal (Loaded) texture.
 FORCE_INLINE inline static Texture brighten_texture(Texture tex) {
-  SDL_SetTextureColorMod(tex, 255, 255, 255);
-  if (SDL_SetTextureAlphaMod(tex, (float)(255.0f * (char)1.22f)) != 0) {
-#ifdef HAVE__DEBUG
-    LogToBluebox(5, "Error increasing the texture brightness");
-    return NULL;
-#else
-    return NULL;
-#endif /* HAVE__DEBUG */
-  }
-  return tex;
+    SDL_SetTextureColorMod(tex, 255, 255, 255);
+    if (SDL_SetTextureAlphaMod(tex, (float)(255.0f * (char)1.22f)) != 0) {
+    #ifdef HAVE__DEBUG
+        LogToBluebox(5, "Error increasing the texture brightness");
+        return NULL;
+    #else
+        return NULL;
+    #endif /* HAVE__DEBUG */
+    }
+    return tex;
 }
 
 static bool IsOverlaping(ElementData Data0, ElementData Data1) {
@@ -76,121 +78,130 @@ static bool IsOverlaping(ElementData Data0, ElementData Data1) {
 }
 
 inline static Texture darken_texture(Texture tex) {
-  SDL_SetTextureColorMod(tex, 255, 255, 255);
-  if (SDL_SetTextureAlphaMod(tex, (float)(255.0f / 4)) != 0) {
-#ifdef HAVE__DEBUG
-    LogToBluebox(5, "Error increasing the texture brightness");
-    return NULL;
-#else
-    return NULL;
-#endif /* HAVE__DEBUG */
-  }
-  return tex;
+    SDL_SetTextureColorMod(tex, 255, 255, 255);
+    if (SDL_SetTextureAlphaMod(tex, (float)(255.0f / 4)) != 0) {
+        #ifdef HAVE__DEBUG
+        LogToBluebox(5, "Error increasing the texture brightness");
+        return NULL;
+    #else
+        return NULL;
+    #endif /* HAVE__DEBUG */
+    }
+    return tex;
 }
 
-Texture RenderGrowthT(Texture tex, Renderer* renderer) {
-        SDL_RenderClear(*renderer);
-        SDL_RenderPresent(*renderer);
-        SDL_RenderCopy(*renderer, tex, NULL, NULL);
-        return NONNULL;
+TextureData RedrawTexture(TextureData data) {
+    SDL_Rect temp_rect;
+    temp_rect.x = data.x;
+    temp_rect.y = data.y;
+    temp_rect.w = 32;
+    temp_rect.h = 32;
+    SDL_RenderCopy(*data.RendererID, data.raw_texture, NULL, &temp_rect);
+    return data;
 }
 
-Texture RenderGrowth(SDL_Renderer **Renderer) {
-  /* This may be removed. */
-  SDL_RenderClear(*Renderer);
-  SDL_RenderPresent(*Renderer);
-  Texture TextureID =
-      load_texture_wp("/usr/share/bluebox/pwater.png", Renderer);
-  assert(TextureID != NULL);
-  if (SDL_SetTextureBlendMode(TextureID, SDL_BLENDMODE_BLEND) != 0 ||
-      SDL_SetTextureAlphaMod(TextureID, (char)(255.0f * 4)) != 0) {
-    LogToBluebox(5, "Setting blend mode or alpha failed");
-  }
-  SDL_RenderCopy(*Renderer, TextureID, NULL, NULL);
-  SDL_DestroyTexture(TextureID);
-  return TextureID;
+Texture RenderGrowth(Renderer* RendererID) {
+    SDL_RenderPresent(*RendererID);
+    Texture TextureID = load_texture_wp("/usr/share/bluebox/pwater.png", RendererID);
+    assert(TextureID != NULL);
+    if (SDL_SetTextureBlendMode(TextureID, SDL_BLENDMODE_BLEND) != 0 ||
+        SDL_SetTextureAlphaMod(TextureID, (char)(255.0f * 4)) != 0) {
+        LogToBluebox(5, "Setting blend mode or alpha failed");
+    }
+    SDL_RenderCopy(*RendererID, TextureID, NULL, NULL);
+    return TextureID;
+}
+
+TextureData RenderGrowthT(TextureData data) {
+        SDL_RenderClear(*data.RendererID);
+        SDL_RenderPresent(*data.RendererID);
+        SDL_RenderCopy(*data.RendererID, data.raw_texture, NULL, NULL);
+        return data;
 }
 
 FORCE_INLINE inline bool GetWaterPlaced() { return water_placed; }
 
-NULLPROHIB Texture _RenderParticle(const int x, const int y, const float space,
+NULLPROHIB TextureData _RenderParticle(const int x, const int y, const float space,
                         char **path, Renderer *Renderer, bool SingleClick) {
 
-  bool is_water = false;
-  // We need to declare this as static so that the same message doesn't appear twice.
-  static bool MessageShown = false;
-  register char* water =
-  #ifdef _WIN32
-  "res/pwater.png";
-  #else
-  "/usr/share/bluebox/pwater.png";
-  #endif /* _WIN32 */
-  // Since we access the texture all the time, putting it into 
-  // a register generally helps.
-  register Texture TextureID = NULL;
-  if (strcmp(*path, water) == 0 && SingleClick) {
-    is_water = true;
-    // Since changing the entire codebase is not a viable solution,
-    // we can just call the function from here.
-    bool *WaterPlacedPtr = &water_placed;
-    *WaterPlacedPtr = true;
-    return RenderGrowth(Renderer);
-  } else if (!SingleClick &&
-             strcmp(water, *path) == 0) {
-#ifdef HAVE__DEBUG
-    LogToBluebox(
-        1,
-        "This is a water texture. You cannot place them like other elements");
-#endif /* HAVE__DEBUG */
-    if (!MessageShown) {
-        ErrorMessageT("It seems like the element you have chosen does not permit being placed multiple times. Try single-clicking instead.", NULL, "Could not place element.");
-        MessageShown = true;
-        return (void*) NONNULL;
-    }  
-    is_water = true;
-  }
-  if (!is_water) {
-    ElementData prev, next;
-    if (IsOverlaping(prev, next))
-      return NONNULL;
-    SDL_Rect Rect;
-    ASSERT(*path != NULL);
-#ifdef __LINUX__
-    if (check_file(*path) != true) {
-      char __msg[512];
-      sprintf(
-          __msg,
-          "%s\n\nDebug information: \nPath specified: %s\nRenderer address: "
-          "%p.",
-          "Bluebox tried to load an asset from the disk, but failed. \nPlease make sure you \
+    bool is_water = false;
+    // We need to declare this as static so that the same message doesn't appear twice.
+    static bool MessageShown = false;
+    register char* water =
+    #ifdef _WIN32
+    "res/pwater.png";
+    #else
+    "/usr/share/bluebox/pwater.png";
+    #endif /* _WIN32 */
+    TextureData data;
+    data.RendererID = Renderer;
+    if (strcmp(*path, water) == 0 && SingleClick) {
+        is_water = true;
+      // Since changing the entire codebase is not a viable solution,
+      // we can just call the function from here.
+        bool *WaterPlacedPtr = &water_placed;
+        *WaterPlacedPtr = true;
+        data.raw_texture = load_texture_wp(water, Renderer);
+        return RenderGrowthT(data);
+    } else if (!SingleClick &&
+              strcmp(water, *path) == 0) {
+      #ifdef HAVE__DEBUG
+      LogToBluebox(1,
+        "This is a water texture. You cannot place them like other elements"
+      );
+      #endif /* HAVE__DEBUG */
+      if (!MessageShown) {
+          ErrorMessageT("It seems like the element you have chosen does not permit being placed multiple times. Try single-clicking instead.", NULL, "Could not place element.");
+          MessageShown = true;
+          data.success = false;
+          return data;
+      }  
+      is_water = true;
+    }
+    if (!is_water) {
+      ElementData prev, next;
+      if (IsOverlaping(prev, next)) {
+            data.success = false;
+            return data;
+      }
+      SDL_Rect Rect;
+      ASSERT(*path != NULL);
+      #ifdef __LINUX__
+      if (check_file(*path) != true) {
+        char __msg[512];
+        sprintf(
+            __msg,
+            "%s\n\nDebug information: \nPath specified: %s\nRenderer address: "
+            "%p.",
+            "Bluebox tried to load an asset from the disk, but failed. \nPlease make sure you \
 have installed all the required assets before proceeding.\n \
 You may also try checking if Bluebox has access to the filesystem.\n \
 \nThe application will now be terminated.",
           *path, (void *)Renderer);
-      ErrorMessageT(__msg, NULL, "Error loading assets !");
+        ErrorMessageT(__msg, NULL, "Error loading assets !");
+      }
+      #endif /* __LINUX__ */
+      data.raw_texture = load_texture_wp(*path, Renderer);
+      Texture TextureID_Brightened = brighten_texture(data.raw_texture);
+      if (data.raw_texture == NULL) {
+          LogToBluebox(4, "Texture could not be loaded");
+          data.success = false;
+          return data;
+      }
+      ASSERT(TextureID_Brightened != NULL);
+      /* Enabling blending allows us to have transparent textures. */
+      SDL_SetTextureBlendMode(data.raw_texture, SDL_BLENDMODE_BLEND);
+      Rect.h = 32 * space / (float)1.5f;
+      Rect.w = 32 * space / (float)1.5f;
+      Rect.x = x;
+      Rect.y = y;
+      SDL_RenderCopy(*data.RendererID, data.raw_texture, NULL, &Rect);
+    } else {
+        data.success = false;
+        return data;
     }
-#endif /* __LINUX__ */
-    TextureID = load_texture_wp(*path, Renderer);
-    Texture TextureID_Brightened = brighten_texture(TextureID);
-    if (TextureID == NULL) {
-      LogToBluebox(4, "Texture could not be loaded");
-      return NULL;
-    }
-    ASSERT(TextureID != NULL);
-    ASSERT(TextureID_Brightened != NULL);
-    /* Enabling blending allows us to have transparent textures. */
-    SDL_SetTextureBlendMode(TextureID, SDL_BLENDMODE_BLEND);
-    Rect.h = 32 * space / (float)1.5f;
-    Rect.w = 32 * space / (float)1.5f;
-    Rect.x = x;
-    Rect.y = y;
-    SDL_RenderCopy(*Renderer, TextureID, NULL, &Rect);
-    SDL_DestroyTexture(TextureID);
-    SDL_DestroyTexture(TextureID_Brightened);
-  } else {
-    return (void *)1;
-  }
-  return (void *)TextureID;
+    data.success = false;
+    return (TextureData) data;
 }
 
 
