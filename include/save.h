@@ -26,7 +26,7 @@ Copyright (C) 2022 Aggelos Tselios
 #ifdef __BLUEBOX_SAVING_ENABLED
 extern int SaveProgress(bool autosave, SDL_Renderer** Renderer, SDL_Window** Window);
 extern int RemoveSave(void);
-extern void* LoadSave(Renderer* Renderer);
+extern void LoadSave(Renderer* Renderer);
 #endif /* __BLUEBOX_SAVING_ENABLED */
 #endif /* _SAVE_H */
 
