@@ -19,12 +19,13 @@ Copyright (C) 2022 Aggelos Tselios
 #define __VECTOR_H__
 
 #include "Bluebox.h"
+#include "render.h"
 
 typedef struct Vector {
-        void* handle;
+        TextureData* handle;
         long length;
         size_t size, alignment;
-        int count;
+        int count, amount_of_items;
 } Vector;
 
 /* 
@@ -34,7 +35,7 @@ typedef struct Vector {
 extern Vector CreateVector(size_t alignment);
 
 /* Adds a new value to the vector, a copy or reference of 'data'. */
-extern void PushToVector(Vector* vec, void* data);
+extern void PushToVector(Vector* vec, TextureData data);
 
 /* 
  * Removes the value from that size of the vector, setting it to NULL. 
@@ -47,4 +48,10 @@ void PopFromVector(Vector* vec, int location);
  * process equivalent to the size of a block.
 */
 void PopLastFromVector(Vector* vec);
+
+/*
+ * Delete the vector and free memory in the process.
+*/
+void DeleteVector();
+
 #endif /* __VECTOR_H__ */
