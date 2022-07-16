@@ -94,8 +94,8 @@ TextureData RedrawTexture(TextureData data) {
     SDL_Rect temp_rect;
     temp_rect.x = data.x;
     temp_rect.y = data.y;
-    temp_rect.w = 32;
-    temp_rect.h = 32;
+    temp_rect.w = (32 * (float)1.5f) * 2;
+    temp_rect.h = (32 * (float)1.5f) * 2;
     SDL_RenderCopy(*data.RendererID, data.raw_texture, NULL, &temp_rect);
     return data;
 }
