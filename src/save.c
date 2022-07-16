@@ -38,7 +38,7 @@ FORCE_INLINE inline static char* getdate(void) {
     time_t rawtime;
     time(&rawtime);
     struct tm* tmp = localtime(&rawtime);
-    strftime(__retval, sizeof(__retval), "%c ", tmp);
+    strftime(__retval, sizeof(__retval), "%d", tmp);
     char* ret = __retval;
     return ret;
 }
@@ -71,9 +71,8 @@ int RemoveSave() {
     InfoMessage(err, NULL);
     return 0;
 }
-
+#ifdef __BLUEBOX_SAVING_ENABLED
 int SaveProgress(bool autosave, SDL_Renderer** Renderer, SDL_Window** Window) {
-    #ifdef __BLUEBOX_SAVING_ENABLED
     char dirpath[1024];
     if (!save_directory_exists()) {
         snprintf(dirpath, sizeof(dirpath), "%s/.local/share/bluebox/", getenv("HOME"));
@@ -108,9 +107,9 @@ int SaveProgress(bool autosave, SDL_Renderer** Renderer, SDL_Window** Window) {
     char info[MAX_PATH + 128];
     snprintf(info, sizeof(info), "The game was saved at %s.\nDate: %s.", location, getdate());
     InfoMessage(info, Window);
-    #endif /* __BLUEBOX_SAVING_ENABLED */
     return 0;
 }
+#endif /* __BLUEBOX_SAVING_ENABLED */
 /* Work in progress */
 __DEPRECATED__ void LoadSave(Renderer* Renderer) {
     TextureData data;
