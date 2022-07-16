@@ -100,16 +100,20 @@ TextureData RedrawTexture(TextureData data) {
     return data;
 }
 
-Texture RenderGrowth(Renderer* RendererID) {
+TextureData RenderGrowth(Renderer* RendererID) {
     SDL_RenderPresent(*RendererID);
-    Texture TextureID = load_texture_wp("/usr/share/bluebox/pwater.png", RendererID);
-    assert(TextureID != NULL);
-    if (SDL_SetTextureBlendMode(TextureID, SDL_BLENDMODE_BLEND) != 0 ||
-        SDL_SetTextureAlphaMod(TextureID, (char)(255.0f * 4)) != 0) {
+    TextureData data;
+    data.RendererID = RendererID;
+    data.raw_texture = load_texture_wp("/usr/share/bluebox/pwater.png", RendererID);
+    assert(data.raw_texture != NULL);
+    if (SDL_SetTextureBlendMode(data.raw_texture, SDL_BLENDMODE_BLEND) != 0 ||
+        SDL_SetTextureAlphaMod(data.raw_texture, (char)(255.0f * 4)) != 0) {
         LogToBluebox(5, "Setting blend mode or alpha failed");
+        data.success = false;
     }
-    SDL_RenderCopy(*RendererID, TextureID, NULL, NULL);
-    return TextureID;
+    SDL_RenderCopy(*data.RendererID, data.raw_texture, NULL, NULL);
+    data.success = true;
+    return data;
 }
 
 TextureData RenderGrowthT(TextureData data) {
@@ -121,9 +125,8 @@ TextureData RenderGrowthT(TextureData data) {
 
 FORCE_INLINE inline bool GetWaterPlaced() { return water_placed; }
 
-NULLPROHIB TextureData _RenderParticle(const int x, const int y, const float space,
-                        char **path, Renderer *Renderer, bool SingleClick) {
-
+NULLPROHIB TextureData _RenderParticle
+(const int x, const int y, const float space, char **path, Renderer *Renderer, bool SingleClick) {
     bool is_water = false;
     // We need to declare this as static so that the same message doesn't appear twice.
     static bool MessageShown = false;
@@ -135,6 +138,9 @@ NULLPROHIB TextureData _RenderParticle(const int x, const int y, const float spa
     #endif /* _WIN32 */
     TextureData data;
     data.RendererID = Renderer;
+    data.success    = true;
+    data.x = x;
+    data.y = y;
     if (strcmp(*path, water) == 0 && SingleClick) {
         is_water = true;
       // Since changing the entire codebase is not a viable solution,
@@ -153,7 +159,6 @@ NULLPROHIB TextureData _RenderParticle(const int x, const int y, const float spa
       if (!MessageShown) {
           ErrorMessageT("It seems like the element you have chosen does not permit being placed multiple times. Try single-clicking instead.", NULL, "Could not place element.");
           MessageShown = true;
-          data.success = false;
           return data;
       }  
       is_water = true;
@@ -161,7 +166,7 @@ NULLPROHIB TextureData _RenderParticle(const int x, const int y, const float spa
     if (!is_water) {
       ElementData prev, next;
       if (IsOverlaping(prev, next)) {
-            data.success = false;
+            data.success = true;
             return data;
       }
       SDL_Rect Rect;
@@ -197,11 +202,11 @@ You may also try checking if Bluebox has access to the filesystem.\n \
       Rect.y = y;
       SDL_RenderCopy(*data.RendererID, data.raw_texture, NULL, &Rect);
     } else {
-        data.success = false;
+        data.success = true;
         return data;
     }
-    data.success = false;
-    return (TextureData) data;
+    data.success = true;
+    return data;
 }
 
 
