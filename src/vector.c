@@ -15,8 +15,10 @@ Copyright (C) 2022 Aggelos Tselios
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <cstdlib>
+#include <errno.h>
+#include <stdlib.h>
 #include <vector.h>
+#include <log.h>
 
 Vector CreateVector(size_t alignment) {
         Vector vec;
@@ -28,22 +30,47 @@ Vector CreateVector(size_t alignment) {
         vec.size = alignment;
         vec.alignment = alignment;
         vec.count = 0;
-
+        /* 
+         * Since adding to the buffer will increment the amount of items available,
+         * we need to start at minus 1.
+        */
+        vec.amount_of_items = -1;
         return vec;
 }
 
-void PushToVector(Vector* vec, void *data) {
-        vec->count++;
-        vec->handle[vec->count] = data;
-        vec->size = vec->alignment * vec->count;
+void PushToVector(Vector* vec, TextureData data) {
+        size_t new_size = vec->size + vec->alignment;
+        TextureData* new_handle = realloc(vec->handle, new_size);
+        if (!new_handle) {
+                LogMessage("Failed to allocate the new memory for the buffer");
+                abort();
+        } else {
+                vec->amount_of_items++;
+                vec->handle = new_handle;
+        }
+        vec->handle[vec->amount_of_items] = data;
+        vec->size = new_size;
 }
 
 void PopFromVector(Vector* vec, int location) {
-        vec->handle[location] = NULL;
+        TextureData data;
+        data.raw_texture = NULL;
+        vec->handle[location] = data;
 }
 
 void PopLastFromVector(Vector* vec) {
         PopFromVector(vec, vec->count);
         vec->size  -= vec->alignment;
+        /* 
+         * While some may consider this questionable, there isn't 
+         * any reason for a second allocation to fail, if the first
+         * one (Which was larger too) succeeded. We must be really unlucky to do this.
+        */
         vec->handle = realloc(vec->handle, vec->size);
+}
+
+void DeleteVector(Vector* vec) {
+        free(vec->handle);
+        vec->length = 0;
+        vec->amount_of_items = 0;
 }
