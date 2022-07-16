@@ -260,11 +260,13 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
         if (set_clear != 0) {
           ShouldClear = true;
           if (set_clear != 3214) {
+            ClearScreen(&RendererID);
             MouseID.MouseDown = true;
             MouseID.x = EventID->button.x - 25;
             MouseID.y = EventID->button.y - 25;
             if (EventID->button.button == SDL_BUTTON_RIGHT) {
             } else if (EventID->button.button == SDL_BUTTON_LEFT) {
+                OceanTexture = RenderGrowth(&RendererID);
                 OceanTexture = RenderGrowth(&RendererID);
                 ASSERT(OceanTexture.success != false);
                 BrushText(&InterV, &RendererID, &WindowID, &i);
