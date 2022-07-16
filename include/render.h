@@ -30,7 +30,6 @@ Copyright (C) 2022 Aggelos Tselios
 typedef struct TextureData {
     Texture raw_texture;
     int x, y;
-    int times_redrawn;
     Renderer* RendererID;
     bool success;
 } TextureData;
@@ -43,7 +42,7 @@ extern TextureData RenderGrowthT(TextureData data);
 // Erase a part of the renderer
 extern NULLPROHIB void Erase(Renderer* RendererID);
 // Use this function to render an element filling the screen.
-extern NULLPROHIB Texture RenderGrowth(SDL_Renderer** Renderer);
+extern NULLPROHIB TextureData RenderGrowth(SDL_Renderer** Renderer);
 // Basically draw an image to the window. The function you see being called for 99% of the game loop.
 extern NULLPROHIB TextureData _RenderParticle(const int x, const int y, const float space, char** path, SDL_Renderer** Renderer, bool SingleClick);
 // Load a static texture for bigger dimensions. Will soon be replaced by Fill()
