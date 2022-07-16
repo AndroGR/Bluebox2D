@@ -285,9 +285,6 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
                       TextureData current = _RenderParticle(MouseID.x, MouseID.y, i, &texture_selected, &RendererID, false);
                       if (!current.success)
                           abort();
-                      #ifdef HAVE__DEBUG
-                      printf("Adding %d bytes into the texture buffer", sizeof(current));
-                      #endif
                       PushToVector(&textures, current);
                       BrushText(&InterV, &RendererID, &WindowID, &i);
                       BufferID = 1;
@@ -303,11 +300,15 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
         case SDL_WINDOWEVENT:
             switch (EventID->window.event) {
             case SDL_WINDOWEVENT_SIZE_CHANGED:
+              /* We will also set the title to the new size: */
+              SDL_GetWindowSize(WindowID, &window_viewport.w, &window_viewport.h);
+              char new_title[128];
+              snprintf(new_title, 128, "Bluebox2D (%dx%d) | Beta Build", window_viewport.w, window_viewport.h);
+              SDL_SetWindowTitle(WindowID, new_title);
               /* First we have to clear the window so no remnants remain. */
               SDL_RenderClear(RendererID);
               window_viewport.x = 0;
               window_viewport.y = 0;
-              SDL_GetWindowSize(WindowID, &window_viewport.w, &window_viewport.h);
               SDL_RenderSetViewport(RendererID, &window_viewport);
 
               /* While we're at it, we'll also render the ocean. */
