@@ -100,6 +100,18 @@ TextureData RedrawTexture(TextureData data) {
     return data;
 }
 
+int CopyTexture(TextureData data, float space) {
+    if (!data.raw_texture || !data.success) return -1;
+
+    SDL_Rect Rect;
+    Rect.x = data.x;
+    Rect.y = data.y;
+    Rect.w = 32 * space / (float)1.5f;
+    Rect.h = 32 * space / (float)1.5f;
+    SDL_RenderCopy(*data.RendererID, data.raw_texture, NULL, &Rect);
+    return 0;
+}
+
 TextureData RenderGrowth(Renderer* RendererID) {
     SDL_RenderPresent(*RendererID);
     TextureData data;

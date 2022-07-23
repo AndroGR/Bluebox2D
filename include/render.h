@@ -34,6 +34,9 @@ typedef struct TextureData {
     bool success;
 } TextureData;
 
+// This function copies the texture on the framebuffer again, without requiring additional memory.
+// This is an experimental way to fix the buffers switching asynchronously.
+extern int CopyTexture(TextureData data, float space);
 // This basically redraws a texture given, useful to redraw
 // textures when resizing the window.
 extern TextureData RedrawTexture(TextureData data);

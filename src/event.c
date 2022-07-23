@@ -15,6 +15,7 @@ Copyright (C) 2022 Aggelos Tselios
 #include "message.h"
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_stdinc.h>
+#include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
 #include <stdbool.h>
 #ifdef __BLUEBOX_ENABLE_MUSIC
@@ -258,9 +259,9 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
             }
         case SDL_MOUSEBUTTONDOWN:
         if (set_clear != 0) {
-          ShouldClear = true;
-          if (set_clear != 3214) {
-            ClearScreen(&RendererID);
+            ShouldClear = true;
+            SDL_RenderClear(RendererID);
+            SDL_RenderClear(RendererID);
             MouseID.MouseDown = true;
             MouseID.x = EventID->button.x - 25;
             MouseID.y = EventID->button.y - 25;
@@ -271,7 +272,6 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
                 ASSERT(OceanTexture.success != false);
                 BrushText(&InterV, &RendererID, &WindowID, &i);
  	          }
-          }
         }
         case SDL_MOUSEMOTION:
           ShouldClear = 2;
@@ -293,7 +293,8 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
                       break;
               } else if (BufferID == 1) {
                 BufferID = 2;
-                _RenderParticle(MouseID.x, MouseID.y, i, &texture_selected, &RendererID, false);
+                TextureData tmp = _RenderParticle(MouseID.x, MouseID.y, i, &texture_selected, &RendererID, false);
+                CopyTexture(tmp, i);
                 /* No need to update, since the loop already updates each frame. */
                 break;
               }
@@ -326,8 +327,15 @@ extern int PollEvents(Event *EventID, bool* KeepWindowOpen_ptr, Renderer Rendere
             case SDL_MOUSEBUTTONUP:
                 MouseID.MouseDown = false;
                 break;
-        }
-	  SDL_RenderPresent(RendererID);
+          }
+          if (ShouldClear) {
+              SDL_RenderClear(RendererID);
+              OceanTexture = RenderGrowth(&RendererID);
+              for (int _a = 0; _a < textures.amount_of_items; _a++) {
+                  RedrawTexture(textures.handle[_a]);
+              }
+	            SDL_RenderPresent(RendererID);
+          }
     } while(*KeepWindowOpen_ptr == (bool) true);
 
   quit:
