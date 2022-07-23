@@ -1,10 +1,10 @@
 This is a list containing everything related to future releases when it comes to features and bug fixes. Update this list if 
 you encounter another problem, have a new feature to report or a bug was fixed but the list wasn't updated.
 # Known Bugs:
-- Buffers switching asynchronously (Partially fixed)
-- When resizing, the particles stay in the same position (Not fixed, questionable)
+- Buffers switching asynchronously (Fixed)
+- When resizing, the particles stay in the same position (Fixed)
 - Pressing S on some platforms is the same as pressing Ctrl+S (Not fixed)
-- Wayland / VSync sessions present screen flickering (Not fixed)
+- Wayland / VSync sessions present screen flickering (Fixed)
 - Ubuntu packages do not work with Debian (Not fixed, abandoned)
 # Planned changes for the next release:
 - The window will be resizable (Done)
